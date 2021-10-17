@@ -11,7 +11,6 @@ namespace MonsterCardTradingGame
         public string name { get; set; }
         public int damage { get; }
         public ElementType elementType { get; set; }
-
         void attack();
     }
 }

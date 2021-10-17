@@ -8,7 +8,9 @@ namespace MonsterCardTradingGame
 {
     class User
     {
-        private Stack _stack;
-        private Deck _deck;
+        private Stack _stack { get; set; }
+        private Deck _deck { get; set; }
+        public string name { get; set; }
+        public string password { get; set; }
     }
 }

@@ -15,9 +15,9 @@ namespace MonsterCardTradingGame
             this.MonsterType = MonsterType.Dragon;
         }
 
-        public string name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public string name { get;set; }
 
-        public int damage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public int damage { get; set; }
         public MonsterType MonsterType { get; set; }
         public void attack()
         {

@@ -7,6 +7,8 @@ namespace MonsterCardTradingGame
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            Package testpackage = new Package();
+            testpackage.PrintPackageContents();
         }
     }
 }

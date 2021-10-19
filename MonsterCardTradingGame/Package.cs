@@ -23,7 +23,21 @@ namespace MonsterCardTradingGame
         List<ICard> CardsInPackage;
         public Package()
         {
-
+            CardsInPackage = new List<ICard>();
+            Monster monster = new Monster();
+            CardsInPackage.Add(monster);
+        }
+        void AddCardToList()
+        {
+            Monster test = new Monster();
+            CardsInPackage.Add(test);
+        }
+        public void PrintPackageContents()
+        {
+            foreach(ICard Card in CardsInPackage)
+            {
+                Console.WriteLine(Card.name);
+            }
         }
     }
 }

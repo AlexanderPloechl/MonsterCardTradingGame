@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace MonsterCardTradingGame
 {
-    interface ICard
+    interface IMonster : ICard
     {
-        public string name { get; set; }
-        public int damage { get; }
-        void attack();
+        MonsterType MonsterType { get; set; }
     }
 }

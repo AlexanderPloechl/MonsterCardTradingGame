@@ -6,10 +6,14 @@ using System.Threading.Tasks;
 
 namespace MonsterCardTradingGame
 {
-    interface ICard
+    public enum MonsterType
     {
-        public string name { get; set; }
-        public int damage { get; }
-        void attack();
+        Goblin,
+        Dragon,
+        Wizard,
+        Ork,
+        Knight,
+        Kraken,
+        Fireelf,
     }
 }

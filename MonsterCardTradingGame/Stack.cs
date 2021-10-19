@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MonsterCardTradingGame
 {
-    class Stack : ICard
+    class Stack : IMonster, ISpell
     {
         List<ICard> stack;
 
@@ -15,6 +15,8 @@ namespace MonsterCardTradingGame
         public int damage => throw new NotImplementedException();
 
         public ElementType elementType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public ElementType ElementType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public MonsterType MonsterType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public void attack()
         {

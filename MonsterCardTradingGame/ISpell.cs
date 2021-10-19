@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace MonsterCardTradingGame
 {
-    interface ICard
+    interface ISpell : ICard
     {
-        public string name { get; set; }
-        public int damage { get; }
-        void attack();
+        public ElementType ElementType { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace MonsterCardTradingGame
 
         public string name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public int damage => throw new NotImplementedException();
+        public int damage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public ElementType elementType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public ElementType ElementType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

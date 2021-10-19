@@ -8,8 +8,8 @@ namespace MonsterCardTradingGame
 {
     interface ICard
     {
-        public string name { get; set; }
-        public int damage { get; }
+        string name { get; set; }
+        int damage { get; set; }
         void attack();
     }
 }

@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 
 namespace MonsterCardTradingGame
 {
-    class Deck : IMonster, ISpell
+    class Monster : ICard
     {
-        List<ICard> deck;
+        public Monster()
+        {
+            this.name = "test";
+            this.damage = 100;
+            this.MonsterType = MonsterType.Dragon;
+        }
 
         public string name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public int damage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public ElementType elementType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public ElementType ElementType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public MonsterType MonsterType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
+        public MonsterType MonsterType { get; set; }
         public void attack()
         {
             throw new NotImplementedException();

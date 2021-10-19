@@ -8,6 +8,6 @@ namespace MonsterCardTradingGame
 {
     interface ISpell : ICard
     {
-        public ElementType ElementType { get; set; }
+        ElementType ElementType { get; set; }
     }
 }

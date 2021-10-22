@@ -1,0 +1,8 @@
+projekt nach ca 2h verworfen, weil chaos
+neues projekt erstellt
+klassen und interfaces und enums erstellt
+stack und deck klasse verworfen -> stattdessen listen in userklasse
+monster und spell klasse verworfen und durch interfaces erstzt
+doch wieder monster und spell als klasse statt als interface
+package und monster und spell kalsse inmplementiert (nicht final aber funktionsfähig)
+protokoll von DOCX auf txt geändert dass ich in vs direkt mitschreiben kann

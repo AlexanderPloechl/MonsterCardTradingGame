@@ -6,3 +6,5 @@ monster und spell klasse verworfen und durch interfaces erstzt
 doch wieder monster und spell als klasse statt als interface
 package und monster und spell kalsse inmplementiert (nicht final aber funktionsfähig)
 protokoll von DOCX auf txt geändert dass ich in vs direkt mitschreiben kann
+created userBranch
+merged packageBranch into master

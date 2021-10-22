@@ -6,18 +6,17 @@ using System.Threading.Tasks;
 
 namespace MonsterCardTradingGame
 {
-    class Monster : ICard
+    class Spell : ICard
     {
-        public Monster(string name, int damage, MonsterType monsterType)
+        public Spell(string name, int damage, ElementType elementType)
         {
             this.name = name;
             this.damage = damage;
-            this.monsterType = monsterType;
+            this.elementType = elementType;
         }
-
-        public string name { get;set; }
+        public string name { get; set; }
         public int damage { get; set; }
-        public MonsterType monsterType { get; set; }
+        public ElementType elementType { get; set; }
         public void attack()
         {
             throw new NotImplementedException();

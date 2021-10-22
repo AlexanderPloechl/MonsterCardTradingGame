@@ -6,37 +6,29 @@ using System.Threading.Tasks;
 
 namespace MonsterCardTradingGame
 {
-    class Package //: IMonster, ISpell
+    class Package
     {
-        //public string name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        //public int damage => throw new NotImplementedException();
-
-        //public ElementType elementType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        //public ElementType ElementType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        //public MonsterType MonsterType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        //public void attack()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        const int NumberOfCardsInPackage = 5;
         List<ICard> CardsInPackage;
         public Package()
         {
             CardsInPackage = new List<ICard>();
-            Monster monster = new Monster();
-            CardsInPackage.Add(monster);
+            //for (int i = 0; i < NumberOfCardsInPackage; i++)
+            //{
+            //    CardsInPackage.Add(new Monster());
+            //}
+            CardsInPackage.Add(new Monster("testmonster1", 2, MonsterType.Dragon));
+            CardsInPackage.Add(new Monster("testmonster2", 4, MonsterType.Wizard));
+            CardsInPackage.Add(new Spell("testspell1", 6, ElementType.Fire));
+            CardsInPackage.Add(new Spell("testspell2", 8, ElementType.Fire));
+            CardsInPackage.Add(new Spell("testspell3", 10, ElementType.Fire));
         }
-        void AddCardToList()
-        {
-            Monster test = new Monster();
-            CardsInPackage.Add(test);
-        }
+
         public void PrintPackageContents()
         {
-            foreach(ICard Card in CardsInPackage)
+            foreach (ICard Card in CardsInPackage)
             {
-                Console.WriteLine(Card.name);
+                Console.WriteLine($"{Card.name} - {Card.damage}");
             }
         }
     }

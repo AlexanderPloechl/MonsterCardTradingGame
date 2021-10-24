@@ -6,21 +6,32 @@ using System.Threading.Tasks;
 
 namespace MonsterCardTradingGame
 {
-    class Deck : IMonster, ISpell
+    class Deck
     {
-        List<ICard> deck;
+        readonly int NumberOfCardsInDeck = 4;
+        List<ICard> cards;
 
-        public string name { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public int damage { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public ElementType elementType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public ElementType ElementType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public MonsterType MonsterType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public void attack()
+        public Deck(List<ICard> stack)
         {
-            throw new NotImplementedException();
+            for(int i = 0; i < NumberOfCardsInDeck; i++)
+            {
+                AddCardToDeck(stack);
+            }
+        }
+        void AddCardToDeck(List<ICard> stack)
+        {
+            //show cards in stack stack.showCards
+            //choose card
+            //remove card from stack and add to deck
+        }
+        void RemoveCardFromDeck()
+        {
+
+        }
+        void ReplaceCardInDeck(List<ICard> stack)
+        {
+            RemoveCardFromDeck();
+            AddCardToDeck(stack);
         }
     }
 }

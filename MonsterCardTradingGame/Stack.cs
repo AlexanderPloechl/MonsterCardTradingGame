@@ -9,7 +9,7 @@ namespace MonsterCardTradingGame
     class Stack
     {
         int NumberOfCardsStack;
-        List<ICard> cards;
+        public List<ICard> cards;
 
         public Stack()
         {

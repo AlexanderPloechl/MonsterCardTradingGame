@@ -9,7 +9,7 @@ namespace MonsterCardTradingGame
     class Package
     {
         const int NumberOfCardsInPackage = 5;
-        List<ICard> CardsInPackage;
+        public List<ICard> CardsInPackage;
         public Package()
         {
             CardsInPackage = new List<ICard>();

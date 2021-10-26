@@ -8,12 +8,11 @@ namespace MonsterCardTradingGame
 {
     class Stack
     {
-        int NumberOfCardsStack;
         public List<ICard> cards;
 
         public Stack()
         {
-            NumberOfCardsStack = 0;
+            cards = new List<ICard>();
         }
         void AddCardsFromPackageToStacks(List<ICard> PackageToOpen)
         {

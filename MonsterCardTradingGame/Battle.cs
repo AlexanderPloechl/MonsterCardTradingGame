@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MonsterCardTradingGame
 {
-    class Battle : User
+    class Battle
     {
     }
 }

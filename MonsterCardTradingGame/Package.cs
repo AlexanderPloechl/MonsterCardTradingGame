@@ -10,6 +10,7 @@ namespace MonsterCardTradingGame
     {
         const int NumberOfCardsInPackage = 5;
         public List<ICard> CardsInPackage;
+        public const int price = 5;
         public Package()
         {
             CardsInPackage = new List<ICard>();

@@ -8,8 +8,13 @@ namespace MonsterCardTradingGame
 {
     class Deck
     {
-        readonly int NumberOfCardsInDeck = 4;
-        List<ICard> cards;
+        public readonly int NumberOfCardsInDeck = 4;
+        public List<ICard> cards;
+
+        public Deck()
+        {
+            cards = new List<ICard>();
+        }
 
         public Deck(List<ICard> stack)
         {

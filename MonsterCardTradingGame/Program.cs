@@ -9,14 +9,25 @@ namespace MonsterCardTradingGame
             //Console.WriteLine("Hello World!");
             //Package testpackage = new Package();
             //testpackage.PrintPackageContents();
-            User player = new User("Alex", "12345678");
-            player.PrintUserData();
-            player.BuyPackage();
-            player.PrintUserData();
-            player.OpenPackage();
-            player.PrintUserData();
-            player.BuildDeck();
-            player.PrintUserData();
-;        }
+            User player1 = new User("player1", "12345678");
+            player1.PrintUserData();
+            player1.BuyPackage();
+            player1.PrintUserData();
+            player1.OpenPackage();
+            player1.PrintUserData();
+            player1.BuildDeck();
+            player1.PrintUserData();
+
+            User player2 = new User("player2", "12345678");
+            player2.PrintUserData();
+            player2.BuyPackage();
+            player2.PrintUserData();
+            player2.OpenPackage();
+            player2.PrintUserData();
+            player2.BuildDeck();
+            player2.PrintUserData();
+
+            Battle battle = new Battle(player1, player2);
+        }
     }
 }

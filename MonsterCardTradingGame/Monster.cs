@@ -15,9 +15,11 @@ namespace MonsterCardTradingGame
             this.monsterType = monsterType;
         }
 
-        public string name { get;set; }
-        public int damage { get; set; }
-        public MonsterType monsterType { get; set; }
+        public string name { get; private set; }
+        public int damage { get; }
+        public ElementType elementType { get; private set; }
+        public MonsterType monsterType { get; private set; }
+
         public void attack()
         {
             throw new NotImplementedException();

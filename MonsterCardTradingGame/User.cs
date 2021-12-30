@@ -17,7 +17,7 @@ namespace MonsterCardTradingGame
             _stack = new Stack();
             _deck = new Deck();
         }
-
+        private Random random = new Random();
         private Stack _stack { get; set; }
         private Deck _deck { get; set; }
         private string _name { get; set; }
@@ -66,6 +66,17 @@ namespace MonsterCardTradingGame
                 Console.WriteLine("Deck:");
                 PrintContents(_deck.cards);
             }
+        }
+
+        public int GetNumberOfCardsInDeck()
+        {
+            return _deck.cards.Count;
+        }
+
+        public ICard GetRandomCardFromDeck()
+        {
+            int randomIndex = random.Next(_deck.cards.Count);
+            return _deck.cards[randomIndex];
         }
     }
 }

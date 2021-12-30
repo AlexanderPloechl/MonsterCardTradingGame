@@ -28,6 +28,7 @@ namespace MonsterCardTradingGame
             player2.PrintUserData();
 
             Battle battle = new Battle(player1, player2);
+            battle.Fight();
         }
     }
 }

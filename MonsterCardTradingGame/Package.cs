@@ -18,11 +18,11 @@ namespace MonsterCardTradingGame
             //{
             //    CardsInPackage.Add(new Monster());
             //}
-            CardsInPackage.Add(new Monster("testmonster1", 2, MonsterType.Dragon));
-            CardsInPackage.Add(new Monster("testmonster2", 4, MonsterType.Wizard));
-            CardsInPackage.Add(new Spell("testspell1", 6, ElementType.Fire));
-            CardsInPackage.Add(new Spell("testspell2", 8, ElementType.Fire));
-            CardsInPackage.Add(new Spell("testspell3", 10, ElementType.Fire));
+            CardsInPackage.Add(new Monster("WaterGoblin", 10, MonsterType.Goblin));
+            CardsInPackage.Add(new Monster("FireTroll", 15, MonsterType.Troll));
+            CardsInPackage.Add(new Spell("FireSpell", 10, ElementType.Fire));
+            CardsInPackage.Add(new Spell("WaterSpell", 20, ElementType.Water));
+            CardsInPackage.Add(new Spell("RegularSpell", 10, ElementType.Normal));
         }
 
         public void PrintPackageContents()

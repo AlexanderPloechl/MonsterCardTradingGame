@@ -15,5 +15,6 @@ namespace MonsterCardTradingGame
         Knight,
         Kraken,
         Fireelf,
+        Troll
     }
 }

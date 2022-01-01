@@ -14,41 +14,136 @@ namespace MonsterCardTradingGame
         private bool _endGame;
         private int _roundCounter;
         private User _winner;
+        private const int DAMAGEMANIPULATOR = 2;
         public Battle(User player1, User player2)
         {
             _player1 = player1;
             _player2 = player2;
         }
-        
+
+        private User MonsterVsMonster(ICard player1sCard, ICard player2sCard)
+        {
+            //todo special stuff (knights cant swim)
+            if(player1sCard.damage > player2sCard.damage)
+            {
+                return _player1;
+            }
+            else if(player1sCard.damage < player2sCard.damage)
+            {
+                return _player2;
+            }
+            return null;
+        }
+
+        private User MonsterVsSpell(ICard player1sCard, ICard player2sCard)
+        {
+            
+        }
+
+        private User SpellVsSpell(ICard player1sCard, ICard player2sCard)
+        {
+            if(player1sCard.elementType != player2sCard.elementType)
+            {
+                ElementType superiorElement;
+                SuperiorElement.TryGetValue(new HashSet<ElementType> { player1sCard.elementType, player1sCard.elementType }, out superiorElement);
+                if (player1sCard.elementType == superiorElement)
+                {
+                    //player1sCard superior
+                    if (player1sCard.damage * DAMAGEMANIPULATOR > player2sCard.damage / DAMAGEMANIPULATOR)
+                    {
+                        return _player1;
+                    }
+                    else if (player1sCard.damage * DAMAGEMANIPULATOR < player2sCard.damage / DAMAGEMANIPULATOR)
+                    {
+                        return _player2;
+                    }
+                    return null;
+                }
+                else if (player2sCard.elementType == superiorElement)
+                {
+                    //player2sCard superior
+                    if (player1sCard.damage / DAMAGEMANIPULATOR > player2sCard.damage * DAMAGEMANIPULATOR)
+                    {
+                        return _player1;
+                    }
+                    else if (player1sCard.damage / DAMAGEMANIPULATOR < player2sCard.damage * DAMAGEMANIPULATOR)
+                    {
+                        return _player2;
+                    }
+                    return null;
+                }
+                else
+                {
+                    Console.WriteLine("error while choosing multiplier");
+                    return null;
+                }
+            }
+            else
+            {
+                //same element type
+                if (player1sCard.damage > player2sCard.damage)
+                {
+                    return _player1;
+                }
+                else if (player1sCard.damage < player2sCard.damage)
+                {
+                    return _player2;
+                }
+                return null;
+            }
+        }
+
         public void Fight()
         {
+            ICard player1CurrentCard;
+            ICard player2CurrentCard;
             while (!_endGame)
             {
-                if (_player1.GetRandomCardFromDeck() is Monster && _player2.GetRandomCardFromDeck() is Monster)
+                player1CurrentCard = _player1.GetRandomCardFromDeck();
+                player2CurrentCard = _player2.GetRandomCardFromDeck();
+                if (player1CurrentCard is Monster && player2CurrentCard is Monster)
                 {
                     //Monster fight
                     Console.WriteLine("MonsterFight");
+                    _winner = MonsterVsMonster(player1CurrentCard, player2CurrentCard);
                 }
-                if (_player1.GetRandomCardFromDeck() is Spell && _player2.GetRandomCardFromDeck() is Spell)
+                else if (player1CurrentCard is Spell && player2CurrentCard is Spell)
                 {
                     //Spell fight
                     Console.WriteLine("SpellFight");
                 }
-                if (_player1.GetRandomCardFromDeck() is Monster && _player2.GetRandomCardFromDeck() is Spell)
+                else if (player1CurrentCard is Monster && player2CurrentCard is Spell)
                 {
                     //Monster Spell fight
                     Console.WriteLine("MonsterSpellFight");
                 }
-                if (_player1.GetRandomCardFromDeck() is Spell && _player2.GetRandomCardFromDeck() is Monster)
+                else if (player1CurrentCard is Spell && player2CurrentCard is Monster)
                 {
                     //Spell Monster fight
                     Console.WriteLine("SpellMonsterFight");
                 }
+                else
+                {
+                    Console.WriteLine("error while defining card type");
+                }
                 _roundCounter++;
+                if(_winner == _player1)
+                {
+                    //player one gets card of player two
+                }
+                else if(_winner == _player2)
+                {
+                    //player two gets card of player one
+                }
+                else
+                {
+                    //draw
+                }
                 if (_player1.GetNumberOfCardsInDeck() == 0 || _player2.GetNumberOfCardsInDeck() == 0 || _roundCounter >= 100)
                 {
                     _endGame = true;
                 }
+
             }
             if(_roundCounter < 100)
             {
@@ -69,6 +164,15 @@ namespace MonsterCardTradingGame
             {
                 _winner = null;
             }
+            if(_winner != null)
+            {
+                GiveRewards(_winner);
+            }
+        }
+
+        private void GiveRewards(User winner)
+        {
+            //elo und so
         }
     }
 }

@@ -6,6 +6,7 @@ namespace MonsterCardTradingGame
     {
         static void Main(string[] args)
         {
+
             //Console.WriteLine("Hello World!");
             //Package testpackage = new Package();
             //testpackage.PrintPackageContents();
@@ -28,7 +29,8 @@ namespace MonsterCardTradingGame
             player2.PrintUserData();
 
             Battle battle = new Battle(player1, player2);
-            battle.Fight();
+            User winner = battle.Fight();
+
         }
     }
 }

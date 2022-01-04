@@ -30,6 +30,15 @@ namespace MonsterCardTradingGame
 
             Battle battle = new Battle(player1, player2);
             User winner = battle.Fight();
+            if(winner == null)
+            {
+                Console.WriteLine("battle ended in a draw");
+            }
+            else
+            {
+                Console.WriteLine(winner.GetName() + "won the game");
+            }
+           
 
         }
     }

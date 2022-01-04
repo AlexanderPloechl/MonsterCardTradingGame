@@ -78,5 +78,20 @@ namespace MonsterCardTradingGame
             int randomIndex = random.Next(_deck.cards.Count);
             return _deck.cards[randomIndex];
         }
+
+        public void AddCardToDeck(ICard card)
+        {
+            _deck.cards.Add(card);
+        }
+
+        public void RemoveCardFromDeck(ICard card)
+        {
+            _deck.cards.Remove(card);
+        }
+
+        public string GetName()
+        {
+            return _name;
+        }
     }
 }

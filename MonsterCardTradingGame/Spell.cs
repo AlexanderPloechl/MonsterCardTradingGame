@@ -17,9 +17,5 @@ namespace MonsterCardTradingGame
         public string name { get; private set; }
         public int damage { get; }
         public ElementType elementType { get; private set; }
-        public void attack()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

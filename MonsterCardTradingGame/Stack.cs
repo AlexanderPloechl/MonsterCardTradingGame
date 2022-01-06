@@ -18,13 +18,5 @@ namespace MonsterCardTradingGame
         {
             cards.AddRange(PackageToOpen);
         }
-        void RemoveCardFromStack()
-        {
-
-        }
-        void AddCardToStack()
-        {
-
-        }
     }
 }

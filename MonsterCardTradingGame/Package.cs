@@ -14,10 +14,6 @@ namespace MonsterCardTradingGame
         public Package()
         {
             CardsInPackage = new List<ICard>();
-            //for (int i = 0; i < NumberOfCardsInPackage; i++)
-            //{
-            //    CardsInPackage.Add(new Monster());
-            //}
             CardsInPackage.Add(new Monster("WaterGoblin", 10, MonsterType.Goblin));
             CardsInPackage.Add(new Monster("FireTroll", 15, MonsterType.Troll));
             CardsInPackage.Add(new Spell("FireSpell", 10, ElementType.Fire));

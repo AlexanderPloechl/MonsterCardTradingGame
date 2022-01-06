@@ -18,10 +18,7 @@ namespace MonsterCardTradingGame
         {
             //TestConnection();
             //InsertRecord();
-            _isLoggedIn = Login("TestUser6","12345678");
-            //Console.WriteLine("Hello World!");
-            //Package testpackage = new Package();
-            //testpackage.PrintPackageContents();
+            _isLoggedIn = Login("TestUser1","12345678");
             User player1 = new User("player1", "12345678");
             player1.PrintUserData();
             player1.BuyPackage();
@@ -42,7 +39,6 @@ namespace MonsterCardTradingGame
 
             while (!_quit)
             {
-                //_isLoggedIn = true;
                 PrintMenu();
                 _menuInput = Console.ReadKey().KeyChar;
                 switch (_menuInput)

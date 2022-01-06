@@ -17,7 +17,8 @@ namespace MonsterCardTradingGame
         static void Main(string[] args)
         {
             //TestConnection();
-            InsertRecord();
+            //InsertRecord();
+            _isLoggedIn = Login("TestUser6","12345678");
             //Console.WriteLine("Hello World!");
             //Package testpackage = new Package();
             //testpackage.PrintPackageContents();
@@ -41,7 +42,7 @@ namespace MonsterCardTradingGame
 
             while (!_quit)
             {
-                _isLoggedIn = true;
+                //_isLoggedIn = true;
                 PrintMenu();
                 _menuInput = Console.ReadKey().KeyChar;
                 switch (_menuInput)
@@ -194,7 +195,7 @@ namespace MonsterCardTradingGame
         {
             using(NpgsqlConnection con = GetConnection())
             {
-                string query = @"insert into public.test(spalte1,spalte2,Spalte3)values(6,'asdfjkl',11)";
+                string query = @"insert into public.test(spalte1,spalte2,Spalte3)values(8,'ahgkmd',116)";
                 NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                 con.Open();
                 int n = cmd.ExecuteNonQuery();
@@ -202,6 +203,32 @@ namespace MonsterCardTradingGame
                 {
                     Console.WriteLine("Record added");
                 }
+            }
+        }
+
+        private static bool Login(string username, string password)
+        {
+            using (NpgsqlConnection con = GetConnection())
+            {
+                bool success;
+                string query = @"select * from UserLogin(:_username,:_password)";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_username", username);
+                cmd.Parameters.AddWithValue("_password", password);
+                con.Open();
+                int n = (int)cmd.ExecuteScalar();
+                if (n == 1)
+                {
+                    Console.WriteLine("Login successfull!");
+                    success = true;
+                }
+                else
+                {
+                    Console.WriteLine("Login failed!");
+                    success = false;
+                }
+                con.Close();
+                return success;
             }
         }
     }

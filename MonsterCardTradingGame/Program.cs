@@ -1,5 +1,12 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Npgsql;
+using System.Data;
+//postgre pw 12345678
+//port 5432
 namespace MonsterCardTradingGame
 {
     class Program
@@ -9,10 +16,12 @@ namespace MonsterCardTradingGame
         private static bool _quit;
         static void Main(string[] args)
         {
+            //TestConnection();
+            InsertRecord();
             //Console.WriteLine("Hello World!");
             //Package testpackage = new Package();
             //testpackage.PrintPackageContents();
-            /*User player1 = new User("player1", "12345678");
+            User player1 = new User("player1", "12345678");
             player1.PrintUserData();
             player1.BuyPackage();
             player1.PrintUserData();
@@ -30,18 +39,9 @@ namespace MonsterCardTradingGame
             player2.BuildDeck();
             player2.PrintUserData();
 
-            Battle battle = new Battle(player1, player2);
-            User winner = battle.Fight();
-            if(winner == null)
-            {
-                Console.WriteLine("battle ended in a draw");
-            }
-            else
-            {
-                Console.WriteLine(winner.GetName() + "won the game");
-            }*/
             while (!_quit)
             {
+                _isLoggedIn = true;
                 PrintMenu();
                 _menuInput = Console.ReadKey().KeyChar;
                 switch (_menuInput)
@@ -88,7 +88,16 @@ namespace MonsterCardTradingGame
                     case '5':
                         if (_isLoggedIn)
                         {
-
+                            Battle battle = new Battle(player1, player2);
+                            User winner = battle.Fight();
+                            if (winner == null)
+                            {
+                                Console.WriteLine("battle ended in a draw");
+                            }
+                            else
+                            {
+                                Console.WriteLine(winner.GetName() + "won the game");
+                            }
                         }
                         break;
                     case '6':
@@ -133,7 +142,7 @@ namespace MonsterCardTradingGame
         }
         private static void PrintMenu()
         {
-            Console.WriteLine(" \n><><><><><><><><><><><><><><><><><><><><><");
+            Console.WriteLine("\n ><><><><><><><><><><><><><><><><><><><><><");
             Console.WriteLine(" > ___      ___ _________   _____   _____ <");
             Console.WriteLine(" > |  \\    /  | |__   __|  / ___|  / ___| <");
             Console.WriteLine(" > |   \\  /   |    | |    | /     | / __  <");
@@ -163,6 +172,37 @@ namespace MonsterCardTradingGame
                 Console.WriteLine(" Press \"Q\" to QUIT!");
             }
             
+        }
+
+        private static void TestConnection()
+        {
+            using(NpgsqlConnection con=GetConnection())
+            {
+                con.Open();
+                if (con.State == ConnectionState.Open)
+                {
+                    Console.WriteLine("Connected");
+                }
+            }
+        }
+        private static NpgsqlConnection GetConnection()
+        {
+            return new NpgsqlConnection(@"Server=localhost;Port=5432;User Id=postgres;Password=12345678;Database=postgres;");
+        }
+
+        private static void InsertRecord()
+        {
+            using(NpgsqlConnection con = GetConnection())
+            {
+                string query = @"insert into public.test(spalte1,spalte2,Spalte3)values(6,'asdfjkl',11)";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                con.Open();
+                int n = cmd.ExecuteNonQuery();
+                if (n == 1)
+                {
+                    Console.WriteLine("Record added");
+                }
+            }
         }
     }
 }

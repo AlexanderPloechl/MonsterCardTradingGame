@@ -45,16 +45,22 @@ namespace MonsterCardTradingGame
             if (weaknessPlayer1sMonster.Contains(player2sMonster.monsterType) && !weaknessPlayer2sMonster.Contains(player1sMonster.monsterType))
             {
                 //player1 weak against player2 and player2 not weak against player1
+                Console.WriteLine("\n --------------");
+                Console.WriteLine($" {player1sMonster.name} is weak against {player2sMonster.name} therefor ...");
                 return _player2;
             }
             else if(weaknessPlayer2sMonster.Contains(player1sMonster.monsterType) && !weaknessPlayer1sMonster.Contains(player2sMonster.monsterType))
             {
                 //player2 weak against player1 and player1 not weak against player2
+                Console.WriteLine("\n --------------");
+                Console.WriteLine($" {player2sMonster.name} is weak against {player1sMonster.name} therefor ...");
                 return _player1;
             }
             else if(weaknessPlayer1sMonster.Contains(player2sMonster.monsterType) && weaknessPlayer2sMonster.Contains(player1sMonster.monsterType))
             {
                 //both are weak against each other
+                Console.WriteLine("\n --------------");
+                Console.WriteLine($" {player1sMonster.name} and {player2sMonster.name} are both weak against each other therefor ...");
                 return null;
             }
             else
@@ -90,16 +96,22 @@ namespace MonsterCardTradingGame
                 if (weaknessPlayer1sSpell.Contains(player2sMonster.monsterType) && !weaknessPlayer2sMonster.Contains(player1sSpell.elementType))
                 {
                     //player1 weak against player2 and player2 not weak against player1
+                    Console.WriteLine("\n --------------");
+                    Console.WriteLine($" {player1sSpell.name} is weak against {player2sMonster.name} therefor ...");
                     return _player2;
                 }
                 else if (weaknessPlayer2sMonster.Contains(player1sSpell.elementType) && !weaknessPlayer1sSpell.Contains(player2sMonster.monsterType))
                 {
                     //player2 weak against player1 and player1 not weak against player2
+                    Console.WriteLine("\n --------------");
+                    Console.WriteLine($" {player2sMonster.name} is weak against {player1sSpell.name} therefor ...");
                     return _player1;
                 }
                 else if (weaknessPlayer1sSpell.Contains(player2sMonster.monsterType) && weaknessPlayer2sMonster.Contains(player1sSpell.elementType))
                 {
                     //both are weak against each other
+                    Console.WriteLine("\n --------------");
+                    Console.WriteLine($" {player1sSpell.name} and {player2sMonster.name} are both weak against each other therefor ...");
                     return null;
                 }
             }
@@ -124,16 +136,22 @@ namespace MonsterCardTradingGame
                 if (weaknessPlayer1sMonster.Contains(player2sSpell.elementType) && !weaknessPlayer2sSpell.Contains(player1sMonster.monsterType))
                 {
                     //player1 weak against player2 and player2 not weak against player1
+                    Console.WriteLine("\n --------------");
+                    Console.WriteLine($" {player1sMonster.name} is weak against {player2sSpell.name} therefor ...");
                     return _player2;
                 }
                 else if (weaknessPlayer2sSpell.Contains(player1sMonster.monsterType) && !weaknessPlayer1sMonster.Contains(player2sSpell.elementType))
                 {
                     //player2 weak against player1 and player1 not weak against player2
+                    Console.WriteLine("\n --------------");
+                    Console.WriteLine($" {player2sSpell.name} is weak against {player1sMonster.name} therefor ...");
                     return _player1;
                 }
                 else if (weaknessPlayer1sMonster.Contains(player2sSpell.elementType) && weaknessPlayer2sSpell.Contains(player1sMonster.monsterType))
                 {
                     //both are weak against each other
+                    Console.WriteLine("\n --------------");
+                    Console.WriteLine($" {player1sMonster.name} and {player2sSpell.name} are both weak against each other therefor ...");
                     return null;
                 }
             }
@@ -141,37 +159,48 @@ namespace MonsterCardTradingGame
             if (player1sCard.elementType != player2sCard.elementType)
             {
                 ElementType superiorElement;
-                Console.WriteLine("p1: " + player1sCard.elementType);
-                Console.WriteLine("p2: " + player2sCard.elementType);
                 SuperiorElement.TryGetValue(new HashSet<ElementType> { player1sCard.elementType, player2sCard.elementType }, out superiorElement);
-                Console.WriteLine("superior: "+superiorElement);
-                Console.WriteLine("p1: " + player1sCard.elementType);
-                Console.WriteLine("p2: " + player2sCard.elementType);
+                User winner;
                 if (player1sCard.elementType == superiorElement)
                 {
                     //player1sCard superior
+                    Console.WriteLine($" {player1sCard.elementType} is effective against {player2sCard.elementType}!");
                     if (player1sCard.damage * DAMAGEMANIPULATOR > player2sCard.damage / DAMAGEMANIPULATOR)
                     {
-                        return _player1;
+                        Console.WriteLine($" {player1sCard.damage * DAMAGEMANIPULATOR} ({player1sCard.damage}x{DAMAGEMANIPULATOR}) > {player2sCard.damage / DAMAGEMANIPULATOR} ({player2sCard.damage}/{DAMAGEMANIPULATOR})");
+                        winner = _player1;
                     }
                     else if (player1sCard.damage * DAMAGEMANIPULATOR < player2sCard.damage / DAMAGEMANIPULATOR)
                     {
-                        return _player2;
+                        Console.WriteLine($" {player1sCard.damage * DAMAGEMANIPULATOR} ({player1sCard.damage}x{DAMAGEMANIPULATOR}) < {player2sCard.damage / DAMAGEMANIPULATOR} ({player2sCard.damage}/{DAMAGEMANIPULATOR})");
+                        winner = _player2;
                     }
-                    return null;
+                    else
+                    {
+                        Console.WriteLine($" {player1sCard.damage * DAMAGEMANIPULATOR} ({player1sCard.damage}x{DAMAGEMANIPULATOR}) = {player2sCard.damage / DAMAGEMANIPULATOR} ({player2sCard.damage}/{DAMAGEMANIPULATOR})");
+                        winner = null;
+                    }
+                    return winner;
                 }
                 else if (player2sCard.elementType == superiorElement)
                 {
                     //player2sCard superior
                     if (player1sCard.damage / DAMAGEMANIPULATOR > player2sCard.damage * DAMAGEMANIPULATOR)
                     {
-                        return _player1;
+                        Console.WriteLine($" {player1sCard.damage / DAMAGEMANIPULATOR} ({player1sCard.damage}/{DAMAGEMANIPULATOR}) > {player2sCard.damage * DAMAGEMANIPULATOR} ({player2sCard.damage}x{DAMAGEMANIPULATOR})");
+                        winner = _player1;
                     }
                     else if (player1sCard.damage / DAMAGEMANIPULATOR < player2sCard.damage * DAMAGEMANIPULATOR)
                     {
-                        return _player2;
+                        Console.WriteLine($" {player1sCard.damage / DAMAGEMANIPULATOR} ({player1sCard.damage}/{DAMAGEMANIPULATOR}) < {player2sCard.damage * DAMAGEMANIPULATOR} ({player2sCard.damage}x{DAMAGEMANIPULATOR})");
+                        winner = _player1;
                     }
-                    return null;
+                    else
+                    {
+                        Console.WriteLine($" {player1sCard.damage / DAMAGEMANIPULATOR} ({player1sCard.damage}/{DAMAGEMANIPULATOR}) = {player2sCard.damage * DAMAGEMANIPULATOR} ({player2sCard.damage}x{DAMAGEMANIPULATOR})");
+                        winner = _player1;
+                    }
+                    return winner;
                 }
                 else
                 {
@@ -188,19 +217,29 @@ namespace MonsterCardTradingGame
 
         private User StandardDamageComparison(ICard player1sCard, ICard player2sCard)
         {
+            User winner;
+            Console.WriteLine("\n --------------");
+            Console.WriteLine($" {player1sCard.damage} dmg VS {player2sCard.damage} dmg");
             if (player1sCard.damage > player2sCard.damage)
             {
-                return _player1;
+                winner = _player1;
             }
             else if (player1sCard.damage < player2sCard.damage)
             {
-                return _player2;
+                winner = _player2;
             }
-            return null;
+            else
+            {
+                winner = null;
+            }
+            return winner;
         }
 
         public User Fight()
         {
+            Console.WriteLine("\n _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
+            Console.WriteLine($" {_player1.GetName()} <p1elo> VS {_player2.GetName()} <p2elo>" );
+            Console.WriteLine(" _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
             ICard player1CurrentCard;
             ICard player2CurrentCard;
             while (!_endGame)
@@ -210,11 +249,14 @@ namespace MonsterCardTradingGame
                 if (player1CurrentCard is Monster && player2CurrentCard is Monster)
                 {
                     //Monster fight
-                    Console.WriteLine("MonsterFight");
+                    Console.WriteLine("\n --------------");
+                    Console.WriteLine($" {player1CurrentCard.name} VS {player2CurrentCard.name}");
                     _winner = MonsterVsMonster(player1CurrentCard, player2CurrentCard);
                 }
                 else if(player1CurrentCard is Spell || player2CurrentCard is Spell){
                     //Spell involved
+                    Console.WriteLine("\n --------------");
+                    Console.WriteLine($" {player1CurrentCard.name} VS {player2CurrentCard.name}");
                     _winner = SpellVsRandom(player1CurrentCard, player2CurrentCard);
                 }
                 else
@@ -227,19 +269,19 @@ namespace MonsterCardTradingGame
                     //player one gets card of player two
                     _player1.AddCardToDeck(player2CurrentCard);
                     _player2.RemoveCardFromDeck(player2CurrentCard);
-                    Console.WriteLine(_player1.GetName());
+                    Console.WriteLine($" {_player1.GetName()}'s Card: {player1CurrentCard.name} WINS!");
                 }
                 else if(_winner == _player2)
                 {
                     //player two gets card of player one
                     _player2.AddCardToDeck(player1CurrentCard);
                     _player1.RemoveCardFromDeck(player1CurrentCard);
-                    Console.WriteLine(_player2.GetName());
+                    Console.WriteLine($" {_player2.GetName()}'s Card: {player2CurrentCard.name} WINS!");
                 }
                 else
                 {
                     //draw
-                    Console.WriteLine("draw");
+                    Console.WriteLine($" {_player1.GetName()}'s Card: {player1CurrentCard.name} and { _player2.GetName()}'s Card: {player2CurrentCard.name} TIED!");
                 }
                 if (_player1.GetNumberOfCardsInDeck() == 0 || _player2.GetNumberOfCardsInDeck() == 0 || _roundCounter >= 100)
                 {
@@ -259,7 +301,7 @@ namespace MonsterCardTradingGame
                 }
                 else
                 {
-                    Console.WriteLine("error while assigning winner");
+                    Console.WriteLine("Error while assigning winner");
                 }
             }
             else

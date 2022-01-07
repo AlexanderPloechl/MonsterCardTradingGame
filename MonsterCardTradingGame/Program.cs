@@ -18,7 +18,7 @@ namespace MonsterCardTradingGame
         {
             //TestConnection();
             //InsertRecord();
-            _isLoggedIn = Login("TestUser1","12345678");
+            
             User player1 = new User("player1", "12345678");
             player1.PrintUserData();
             player1.BuyPackage();
@@ -46,7 +46,11 @@ namespace MonsterCardTradingGame
                     case 'L':
                         if (!_isLoggedIn)
                         {
-
+                            Console.Write("\n Username: ");
+                            string username = Console.ReadLine();
+                            Console.Write(" Password: ");
+                            string password = Console.ReadLine();
+                            _isLoggedIn = Login(username, password);
                         }
                         break;
                     case 'S':
@@ -87,14 +91,17 @@ namespace MonsterCardTradingGame
                         {
                             Battle battle = new Battle(player1, player2);
                             User winner = battle.Fight();
+                            Console.WriteLine("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
                             if (winner == null)
                             {
                                 Console.WriteLine("battle ended in a draw");
                             }
                             else
                             {
-                                Console.WriteLine(winner.GetName() + "won the game");
+                                Console.WriteLine($" {winner.GetName()}  won the game");
+                                Console.WriteLine($" elo gained:");
                             }
+                            Console.WriteLine("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
                         }
                         break;
                     case '6':
@@ -122,16 +129,16 @@ namespace MonsterCardTradingGame
                         }
                         break;
                     default:
-                        Console.WriteLine("There is no such command!");
+                        Console.WriteLine("\n There is no such command!");
                         if (_isLoggedIn)
                         {
-                            Console.WriteLine("Use the numbers 1 to 9 to select a command!");
+                            Console.WriteLine(" Use the numbers 1 to 9 to select a command!");
                         }
                         else
                         {
-                            Console.WriteLine("Use either \"L\" (uppercase) or \"S\" (uppercase) to selcet a command!");
+                            Console.WriteLine(" Use either \"L\" (uppercase) or \"S\" (uppercase) to selcet a command!");
                         }
-                        Console.WriteLine("Or use \"Q\" (uppercase) to QUIT");
+                        Console.WriteLine(" Or use \"Q\" (uppercase) to QUIT");
                         break;
                 }
             }
@@ -215,12 +222,12 @@ namespace MonsterCardTradingGame
                 int n = (int)cmd.ExecuteScalar();
                 if (n == 1)
                 {
-                    Console.WriteLine("Login successfull!");
+                    Console.WriteLine(" Login successfull!");
                     success = true;
                 }
                 else
                 {
-                    Console.WriteLine("Login failed!");
+                    Console.WriteLine(" Login failed!");
                     success = false;
                 }
                 con.Close();

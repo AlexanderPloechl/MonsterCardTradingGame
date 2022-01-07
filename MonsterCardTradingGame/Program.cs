@@ -14,29 +14,9 @@ namespace MonsterCardTradingGame
         private static bool _isLoggedIn;
         private static char _menuInput;
         private static bool _quit;
+        private static User player;
         static void Main(string[] args)
         {
-            //TestConnection();
-            //InsertRecord();
-            
-            User player1 = new User("player1", "12345678");
-            player1.PrintUserData();
-            player1.BuyPackage();
-            player1.PrintUserData();
-            player1.OpenPackage();
-            player1.PrintUserData();
-            player1.BuildDeck();
-            player1.PrintUserData();
-
-            User player2 = new User("player2", "12345678");
-            player2.PrintUserData();
-            player2.BuyPackage();
-            player2.PrintUserData();
-            player2.OpenPackage();
-            player2.PrintUserData();
-            player2.BuildDeck();
-            player2.PrintUserData();
-
             while (!_quit)
             {
                 PrintMenu();
@@ -52,11 +32,23 @@ namespace MonsterCardTradingGame
                             string password = Console.ReadLine();
                             _isLoggedIn = Login(username, password);
                         }
+                        else
+                        {
+                            PrintUsage();
+                        }
                         break;
                     case 'S':
                         if (!_isLoggedIn)
                         {
-
+                            Console.Write("\n Username: ");
+                            string username = Console.ReadLine();
+                            Console.Write(" Password: ");
+                            string password = Console.ReadLine();
+                            _isLoggedIn = Signup(username, password); //signing up automatically logs you in
+                        }
+                        else
+                        {
+                            PrintUsage();
                         }
                         break;
                     case 'Q':
@@ -67,11 +59,19 @@ namespace MonsterCardTradingGame
                         {
 
                         }
+                        else
+                        {
+                            PrintUsage();
+                        }
                         break;
                     case '2':
                         if (_isLoggedIn)
                         {
 
+                        }
+                        else
+                        {
+                            PrintUsage();
                         }
                         break;
                     case '3':
@@ -79,16 +79,41 @@ namespace MonsterCardTradingGame
                         {
 
                         }
+                        else
+                        {
+                            PrintUsage();
+                        }
                         break;
                     case '4':
                         if (_isLoggedIn)
                         {
 
                         }
+                        else
+                        {
+                            PrintUsage();
+                        }
                         break;
                     case '5':
                         if (_isLoggedIn)
                         {
+                            User player1 = new User("player1", "12345678");
+                            player1.PrintUserData();
+                            player1.BuyPackage();
+                            player1.PrintUserData();
+                            player1.OpenPackage();
+                            player1.PrintUserData();
+                            player1.BuildDeck();
+                            player1.PrintUserData();
+
+                            User player2 = new User("player2", "12345678");
+                            player2.PrintUserData();
+                            player2.BuyPackage();
+                            player2.PrintUserData();
+                            player2.OpenPackage();
+                            player2.PrintUserData();
+                            player2.BuildDeck();
+                            player2.PrintUserData();
                             Battle battle = new Battle(player1, player2);
                             User winner = battle.Fight();
                             Console.WriteLine("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
@@ -103,11 +128,19 @@ namespace MonsterCardTradingGame
                             }
                             Console.WriteLine("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
                         }
+                        else
+                        {
+                            PrintUsage();
+                        }
                         break;
                     case '6':
                         if (_isLoggedIn)
                         {
 
+                        }
+                        else
+                        {
+                            PrintUsage();
                         }
                         break;
                     case '7':
@@ -115,30 +148,33 @@ namespace MonsterCardTradingGame
                         {
 
                         }
+                        else
+                        {
+                            PrintUsage();
+                        }
                         break;
                     case '8':
                         if (_isLoggedIn)
                         {
 
                         }
+                        else
+                        {
+                            PrintUsage();
+                        }
                         break;
                     case '9':
                         if (_isLoggedIn)
                         {
-
-                        }
-                        break;
-                    default:
-                        Console.WriteLine("\n There is no such command!");
-                        if (_isLoggedIn)
-                        {
-                            Console.WriteLine(" Use the numbers 1 to 9 to select a command!");
+                            DisplayScoreboard(player);
                         }
                         else
                         {
-                            Console.WriteLine(" Use either \"L\" (uppercase) or \"S\" (uppercase) to selcet a command!");
+                            PrintUsage();
                         }
-                        Console.WriteLine(" Or use \"Q\" (uppercase) to QUIT");
+                        break;
+                    default:
+                        PrintUsage();
                         break;
                 }
             }
@@ -178,35 +214,51 @@ namespace MonsterCardTradingGame
             
         }
 
-        private static void TestConnection()
+        private static void PrintUsage()
         {
-            using(NpgsqlConnection con=GetConnection())
+            Console.WriteLine("\n There is no such command!");
+            if (_isLoggedIn)
             {
+                Console.WriteLine(" Use the numbers 1 to 9 to select a command!");
+            }
+            else
+            {
+                Console.WriteLine(" Use either \"L\" (uppercase) or \"S\" (uppercase) to selcet a command!");
+            }
+            Console.WriteLine(" Or use \"Q\" (uppercase) to QUIT");
+        }
+
+        private static void DisplayScoreboard(User player)
+        {
+            Console.WriteLine("\n ><><><><><><><");
+            Console.WriteLine(" > Scoreboard <");
+            Console.WriteLine(" ><><><><><><><");
+            Console.WriteLine(" Position - Player: ELO");
+            using (NpgsqlConnection con = GetConnection())
+            {
+                int position = 1;
+                string querey = "select * from public.Users";
+                NpgsqlCommand cmd = new NpgsqlCommand(querey, con);
                 con.Open();
-                if (con.State == ConnectionState.Open)
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read() && position <= 100)
                 {
-                    Console.WriteLine("Connected");
+                    if (reader.GetString(0) == player.GetName())
+                    {
+                        Console.WriteLine($" |{position} - {reader.GetString(0)}: {reader.GetInt32(2)} <= YOU");
+                    }
+                    else
+                    {
+                        Console.WriteLine($" |{position} - {reader.GetString(0)}: {reader.GetInt32(2)}");
+                    }
+                    position++;
                 }
             }
         }
+
         private static NpgsqlConnection GetConnection()
         {
             return new NpgsqlConnection(@"Server=localhost;Port=5432;User Id=postgres;Password=12345678;Database=postgres;");
-        }
-
-        private static void InsertRecord()
-        {
-            using(NpgsqlConnection con = GetConnection())
-            {
-                string query = @"insert into public.test(spalte1,spalte2,Spalte3)values(8,'ahgkmd',116)";
-                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
-                con.Open();
-                int n = cmd.ExecuteNonQuery();
-                if (n == 1)
-                {
-                    Console.WriteLine("Record added");
-                }
-            }
         }
 
         private static bool Login(string username, string password)
@@ -227,11 +279,80 @@ namespace MonsterCardTradingGame
                 }
                 else
                 {
-                    Console.WriteLine(" Login failed!");
+                    Console.WriteLine(" Login failed!\n Check your credentials!");
                     success = false;
+                }
+                if (success)
+                {
+                    string querey = @"select * from public.Users where username = @_username";
+                    NpgsqlCommand cmd2 = new NpgsqlCommand(querey, con);
+                    cmd2.Parameters.AddWithValue("_username", username); 
+                    using NpgsqlDataReader reader = cmd2.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        player = new User(reader.GetString(0).ToString(), reader.GetString(1).ToString());
+                    }
                 }
                 con.Close();
                 return success;
+            }
+        }
+
+        private static bool Signup(string username, string password)
+        {
+            bool success;
+            if (!CheckIfUserExists(username))
+            {
+                using (NpgsqlConnection con = GetConnection())
+                {
+                    string query = @"insert into public.Users(username, password) values(@_username, @_password)";
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("_username", username);
+                    cmd.Parameters.AddWithValue("_password", password);
+                    con.Open();
+                    int n = cmd.ExecuteNonQuery();
+                    if (n == 1)
+                    {
+                        Console.WriteLine(" Signup successfull!");
+                        Login(username, password);
+                        success = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine(" Signup failed!");
+                        success = false;
+                    }
+                    con.Close();
+                }
+            }
+            else
+            {
+                Console.WriteLine($" The name {username} is already in use. Please choose a different name.");
+                success = false;
+            }
+            return success;
+        }
+
+        private static bool CheckIfUserExists(string username)
+        {
+            bool exists;
+            using(NpgsqlConnection con = GetConnection())
+            {
+                string query = @"select count (*) from public.Users where username = @_username";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_username", username);
+                con.Open();
+                int n = Int32.Parse(cmd.ExecuteScalar().ToString());
+                if(n == 1)
+                {
+                    exists = true;
+                }
+                else
+                {
+                    exists = false;
+                }
+                con.Close();
+                return exists;
             }
         }
     }

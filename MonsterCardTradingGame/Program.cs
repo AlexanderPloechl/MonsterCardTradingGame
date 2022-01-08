@@ -97,7 +97,7 @@ namespace MonsterCardTradingGame
                     case '5':
                         if (_isLoggedIn)
                         {
-                            User player1 = new User("player1", "12345678");
+                            User player1 = player;
                             player1.PrintUserData();
                             player1.BuyPackage();
                             player1.PrintUserData();
@@ -106,7 +106,7 @@ namespace MonsterCardTradingGame
                             player1.BuildDeck();
                             player1.PrintUserData();
 
-                            User player2 = new User("player2", "12345678");
+                            User player2 = new User("ProGamer", "pro");
                             player2.PrintUserData();
                             player2.BuyPackage();
                             player2.PrintUserData();
@@ -124,7 +124,35 @@ namespace MonsterCardTradingGame
                             else
                             {
                                 Console.WriteLine($" {winner.GetName()}  won the game");
-                                Console.WriteLine($" elo gained:");
+                                int elo;
+                                if(player1 == winner)
+                                {
+                                    elo = UpdateElos(winner, player2);
+                                    if(elo >= 0)
+                                    {
+                                        Console.WriteLine($" You gained 3 ELO for winning! Your ELO: {elo}");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine(" Error while updating ELO");
+                                    }
+                                }
+                                else if (player2 == winner)
+                                {
+                                    elo = UpdateElos(winner, player1);
+                                    if (elo >= 0)
+                                    {
+                                        Console.WriteLine($" You lost 5 ELO for winning! Your ELO: {elo}");
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine(" Error while updating ELO");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine(" error while calling UpdateElos");
+                                }
                             }
                             Console.WriteLine("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
                         }
@@ -180,6 +208,7 @@ namespace MonsterCardTradingGame
             }
 
         }
+
         private static void PrintMenu()
         {
             Console.WriteLine("\n ><><><><><><><><><><><><><><><><><><><><><");
@@ -237,8 +266,8 @@ namespace MonsterCardTradingGame
             using (NpgsqlConnection con = GetConnection())
             {
                 int position = 1;
-                string querey = "select * from public.Users";
-                NpgsqlCommand cmd = new NpgsqlCommand(querey, con);
+                string query = "select * from public.Users";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                 con.Open();
                 using NpgsqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read() && position <= 100)
@@ -284,8 +313,8 @@ namespace MonsterCardTradingGame
                 }
                 if (success)
                 {
-                    string querey = @"select * from public.Users where username = @_username";
-                    NpgsqlCommand cmd2 = new NpgsqlCommand(querey, con);
+                    string query2 = @"select * from public.Users where username = @_username";
+                    NpgsqlCommand cmd2 = new NpgsqlCommand(query2, con);
                     cmd2.Parameters.AddWithValue("_username", username); 
                     using NpgsqlDataReader reader = cmd2.ExecuteReader();
                     while (reader.Read())
@@ -353,6 +382,86 @@ namespace MonsterCardTradingGame
                 }
                 con.Close();
                 return exists;
+            }
+        }
+        private static int UpdateElos(User winner, User loser)
+        {
+            using (NpgsqlConnection con = GetConnection())
+            {
+                //update winners elo
+                int eloWinner = -1;
+                string query = @"select * from public.Users where username = @_username";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                Console.WriteLine(winner.GetName());
+                cmd.Parameters.AddWithValue("_username", winner.GetName());
+                con.Open();
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Console.WriteLine($"winner {(int)reader.GetInt32(2)}");
+                    eloWinner = (int)reader.GetInt32(2);
+                }
+                if (eloWinner >= 0)
+                {
+                    eloWinner = eloWinner + 3;
+                }
+                con.Close();
+                string query2 = @"update public.Users set elo = @_elo where username = @_username2";
+                NpgsqlCommand cmd2 = new NpgsqlCommand(query2, con);
+                cmd2.Parameters.AddWithValue("_username2", winner.GetName());
+                cmd2.Parameters.AddWithValue("_elo", eloWinner);
+                con.Open();
+                int n = cmd2.ExecuteNonQuery();
+                if(n != 1)
+                {
+                    Console.WriteLine("error while updating elo in database (winner)");
+                }
+                con.Close();
+                //update losers elo
+                int eloLoser = -1;
+                string query3 = @"select * from public.Users where username = @_username3";
+                NpgsqlCommand cmd3 = new NpgsqlCommand(query3, con);
+                Console.WriteLine(loser.GetName());
+                cmd3.Parameters.AddWithValue("_username3", loser.GetName());
+                con.Open();
+                using NpgsqlDataReader reader2 = cmd3.ExecuteReader();
+                while (reader2.Read())
+                {
+                    Console.WriteLine($"loser {(int)reader2.GetInt32(2)}");
+                    eloLoser = (int)reader2.GetInt32(2);
+                }
+                if (eloLoser > 5)
+                {
+                    eloLoser = eloLoser - 5;
+                }
+                else
+                {
+                    eloLoser = 0;
+                }
+                con.Close();
+                string query4 = @"update public.Users set elo = @_elo where username = @_username4";
+                NpgsqlCommand cmd4 = new NpgsqlCommand(query4, con);
+                cmd4.Parameters.AddWithValue("_username4", loser.GetName());
+                cmd4.Parameters.AddWithValue("_elo", eloLoser);
+                con.Open();
+                int n2 = cmd4.ExecuteNonQuery();
+                if (n2 != 1)
+                {
+                    Console.WriteLine("error while updating elo in database (loser)");
+                }
+                con.Close();
+                if (player == winner)
+                {
+                    return eloWinner;
+                }
+                else if (player == loser)
+                {
+                    return eloLoser;
+                }
+                else
+                {
+                    return -1;
+                }
             }
         }
     }

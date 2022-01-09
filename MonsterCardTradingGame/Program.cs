@@ -60,7 +60,7 @@ namespace MonsterCardTradingGame
                     case '2':
                         if (_isLoggedIn)
                         {
-
+                            _player.BuildDeck();
                         }
                         else
                         {

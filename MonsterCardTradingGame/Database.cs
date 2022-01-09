@@ -232,7 +232,6 @@ namespace MonsterCardTradingGame
             {
                 //owned cards
                 Dictionary<string, int> cards = new Dictionary<string, int>();
-                //List<string> cardnames = new List<string>();
                 string query = @"select * from public.CardsInInventory where owner = @_owner and IsInDeck = @_IsInDeck";
                 NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                 cmd.Parameters.AddWithValue("_owner", owner);
@@ -242,13 +241,10 @@ namespace MonsterCardTradingGame
                 while (reader.Read())
                 {
                     Console.WriteLine($"\n {reader.GetString(0)}, {reader.GetString(1)}, {reader.GetBoolean(2)}, {reader.GetInt32(3)}");
-                    //cardnames.Add(reader.GetString(1));
                     cards.Add(reader.GetString(1), reader.GetInt32(3));
                 }
                 con.Close();
                 //split into monsters and spells
-                //List<string> monsternames = new List<string>();
-                //List<string> spellnames = new List<string>();
                 Dictionary<string, int> monsters = new Dictionary<string, int>();
                 Dictionary<string, int> spells = new Dictionary<string, int>();
                 string query2 = @"select * from public.Cards where cardname = @_cardname";
@@ -301,6 +297,58 @@ namespace MonsterCardTradingGame
                     }
                     con.Close();
                 }
+            }
+        }
+        public static int CountCardsInDeck(string username)
+        {
+            int count;
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = @"select count (*) from public.CardsInInventory where owner = @_username and IsInDeck = true";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_username", username);
+                con.Open();
+                count = Int32.Parse(cmd.ExecuteScalar().ToString());
+                con.Close();
+                Console.WriteLine($" Cards in deck {count}");
+                return count;
+            }
+        }
+        public static void MoveCardToDeckOrStack(string cardname, bool ToDeck, string owner)
+        {
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = @"update public.CardsInInventory set IsInDeck = @_ToDeck where owner = @_owner and cardname = @_cardname";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_ToDeck", ToDeck);
+                cmd.Parameters.AddWithValue("_owner", owner);
+                cmd.Parameters.AddWithValue("_cardname", cardname);
+                con.Open();
+                int n = cmd.ExecuteNonQuery();
+                if (n != 1)
+                {
+                    Console.WriteLine(" This Card does not exist or you don't own it!");
+                }
+                con.Close();
+            }
+        }
+
+        public static void DeleteDeck(string owner)
+        {
+            using (NpgsqlConnection con = GetConnection())
+            {
+
+
+                string query = @"update public.CardsInInventory set IsInDeck = false where owner = @_owner";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_owner", owner);
+                con.Open();
+                int n = cmd.ExecuteNonQuery();
+                if (n != 1)
+                {
+                    Console.WriteLine(" Error while deleting your deck");
+                }
+                con.Close();
             }
         }
     }

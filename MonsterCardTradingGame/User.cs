@@ -53,20 +53,20 @@ namespace MonsterCardTradingGame
                 index++;
             }
         }
-        public void BuildDeck()
-        {
-            for(int i = 0; i < _deck.NumberOfCardsInDeck; i++)
-            {
-                Console.WriteLine("Enter the number of a card to add it to your deck!\nStack:");
-                PrintContents(_stack.cards);
-                string input = Console.ReadLine();
-                int ChosenCard = Convert.ToInt32(input);
-                _deck.cards.Add(_stack.cards[ChosenCard - 1]);
-                _stack.cards.RemoveAt(ChosenCard - 1);
-                Console.WriteLine("Deck:");
-                PrintContents(_deck.cards);
-            }
-        }
+        //public void BuildDeck()
+        //{
+        //    for(int i = 0; i < _deck.NumberOfCardsInDeck; i++)
+        //    {
+        //        Console.WriteLine("Enter the number of a card to add it to your deck!\nStack:");
+        //        PrintContents(_stack.cards);
+        //        string input = Console.ReadLine();
+        //        int ChosenCard = Convert.ToInt32(input);
+        //        _deck.cards.Add(_stack.cards[ChosenCard - 1]);
+        //        _stack.cards.RemoveAt(ChosenCard - 1);
+        //        Console.WriteLine("Deck:");
+        //        PrintContents(_deck.cards);
+        //    }
+        //}
 
         public int GetNumberOfCardsInDeck()
         {
@@ -111,6 +111,29 @@ namespace MonsterCardTradingGame
         public void ShowDeck()
         {
             Database.ShowCards(_name, true);
+        }
+        public void BuildDeck()
+        {
+            if(Database.CountCardsInDeck(_name) >= 4)
+            {
+                Console.WriteLine(" Building a new Deck will delete your existing Deck!");
+                Console.WriteLine(" Press \"Y\" to build a new Deck!");
+                Console.WriteLine(" Press any other key to keep your Deck!");
+                char y = Console.ReadKey().KeyChar;
+                if (y == 'Y')
+                {
+                    //delete old deck and move cards back to stack
+                    Database.DeleteDeck(_name);
+                }
+            }
+            while (Database.CountCardsInDeck(_name) < 4)
+            {
+                ShowStack();
+                ShowDeck();
+                Console.WriteLine("Type the name of the card you want to add!");
+                string input = Console.ReadLine();
+                Database.MoveCardToDeckOrStack(input, true, _name);
+            }
         }
     }
 }

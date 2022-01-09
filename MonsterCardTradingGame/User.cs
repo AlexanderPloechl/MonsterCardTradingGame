@@ -20,6 +20,7 @@ namespace MonsterCardTradingGame
         private Stack _stack { get; set; }
         private Deck _deck { get; set; }
         private string _name { get; set; }
+        private int _elo { get; set; }
         private int _coins { get; set; }
         private List<Package> _unopendPackages;
         public void BuyPackage()
@@ -90,6 +91,16 @@ namespace MonsterCardTradingGame
         public string GetName()
         {
             return _name;
+        }
+
+        public void SetElo(int elo)
+        {
+            _elo = elo;
+        }
+
+        public int GetElo()
+        {
+            return _elo;
         }
     }
 }

@@ -225,5 +225,83 @@ namespace MonsterCardTradingGame
                 }
             }
         }
+
+        public static void ShowCards(string owner, bool IsInDeck)
+        {
+            using (NpgsqlConnection con = GetConnection())
+            {
+                //owned cards
+                Dictionary<string, int> cards = new Dictionary<string, int>();
+                //List<string> cardnames = new List<string>();
+                string query = @"select * from public.CardsInInventory where owner = @_owner and IsInDeck = @_IsInDeck";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_owner", owner);
+                cmd.Parameters.AddWithValue("_IsInDeck", IsInDeck);
+                con.Open();
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Console.WriteLine($"\n {reader.GetString(0)}, {reader.GetString(1)}, {reader.GetBoolean(2)}, {reader.GetInt32(3)}");
+                    //cardnames.Add(reader.GetString(1));
+                    cards.Add(reader.GetString(1), reader.GetInt32(3));
+                }
+                con.Close();
+                //split into monsters and spells
+                //List<string> monsternames = new List<string>();
+                //List<string> spellnames = new List<string>();
+                Dictionary<string, int> monsters = new Dictionary<string, int>();
+                Dictionary<string, int> spells = new Dictionary<string, int>();
+                string query2 = @"select * from public.Cards where cardname = @_cardname";
+                foreach (var card in cards)
+                {
+                    NpgsqlCommand cmd2 = new NpgsqlCommand(query2, con);
+                    cmd2.Parameters.AddWithValue("_cardname", card.Key);
+                    con.Open();
+                    using NpgsqlDataReader reader2 = cmd2.ExecuteReader();
+                    while (reader2.Read())
+                    {
+                        Console.WriteLine($"\n {reader2.GetBoolean(0)}, {reader2.GetString(1)}");
+                        if(reader2.GetBoolean(0)){
+                            monsters.Add(reader2.GetString(1), card.Value);
+                        }
+                        else
+                        {
+                            spells.Add(reader2.GetString(1), card.Value);
+                        }
+                    }
+                    con.Close();
+                }
+                //spells
+                Console.WriteLine($" Spells:");
+                string query3 = @"select * from public.Spells where cardname = @_cardname";
+                foreach (var spell in spells)
+                {
+                    NpgsqlCommand cmd3 = new NpgsqlCommand(query3, con);
+                    cmd3.Parameters.AddWithValue("_cardname", spell.Key);
+                    con.Open();
+                    using NpgsqlDataReader reader3 = cmd3.ExecuteReader();
+                    while (reader3.Read())
+                    {
+                        Console.WriteLine($"\n {reader3.GetString(0)}, {reader3.GetInt32(1)}, {reader3.GetInt32(2)}, {spell.Value}");
+                    }
+                    con.Close();
+                }
+                //monsters
+                Console.WriteLine($" Monsters:");
+                string query4 = @"select * from public.Monsters where cardname = @_cardname";
+                foreach (var monster in monsters)
+                {
+                    NpgsqlCommand cmd4 = new NpgsqlCommand(query4, con);
+                    cmd4.Parameters.AddWithValue("_cardname", monster.Key);
+                    con.Open();
+                    using NpgsqlDataReader reader4 = cmd4.ExecuteReader();
+                    while (reader4.Read())
+                    {
+                        Console.WriteLine($"\n {reader4.GetString(0)}, {reader4.GetInt32(1)}, {reader4.GetInt32(2)}, {reader4.GetInt32(3)}, {monster.Value}");
+                    }
+                    con.Close();
+                }
+            }
+        }
     }
 }

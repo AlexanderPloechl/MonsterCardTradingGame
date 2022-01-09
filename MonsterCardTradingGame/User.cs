@@ -8,12 +8,13 @@ namespace MonsterCardTradingGame
 {
     class User
     {
+        Database database = Database.GetDatabaseInstance();
         public User(string name)
         {
             _name = name;
             _coins = 20;
             _unopendPackages = new List<Package>();
-            _stack = new Stack();
+            //_stack = new Stack();
             _deck = new Deck();
         }
         private Random random = new Random();
@@ -101,6 +102,15 @@ namespace MonsterCardTradingGame
         public int GetElo()
         {
             return _elo;
+        }
+        
+        public void ShowStack()
+        {
+            Database.ShowCards(_name, false);
+        }
+        public void ShowDeck()
+        {
+            Database.ShowCards(_name, true);
         }
     }
 }

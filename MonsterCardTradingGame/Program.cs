@@ -50,7 +50,7 @@ namespace MonsterCardTradingGame
                     case '1':
                         if (_isLoggedIn)
                         {
-
+                            _player.ShowStack();
                         }
                         else
                         {

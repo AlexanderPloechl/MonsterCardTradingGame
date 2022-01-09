@@ -8,10 +8,9 @@ namespace MonsterCardTradingGame
 {
     class User
     {
-        public User(string name, string password)
+        public User(string name)
         {
             _name = name;
-            _password = password;
             _coins = 20;
             _unopendPackages = new List<Package>();
             _stack = new Stack();
@@ -21,7 +20,6 @@ namespace MonsterCardTradingGame
         private Stack _stack { get; set; }
         private Deck _deck { get; set; }
         private string _name { get; set; }
-        private string _password { get; set; }
         private int _coins { get; set; }
         private List<Package> _unopendPackages;
         public void BuyPackage()
@@ -42,7 +40,7 @@ namespace MonsterCardTradingGame
         }
         public void PrintUserData()
         {
-            Console.WriteLine($"Username: {_name}\nPassword: {_password}\nCoins: {_coins}\nUnopend packages: {_unopendPackages.Count}\nCards in Stack: {_stack.cards.Count}\nCards in Deck: {_deck.cards.Count}\n");
+            Console.WriteLine($"Username: {_name}\nCoins: {_coins}\nUnopend packages: {_unopendPackages.Count}\nCards in Stack: {_stack.cards.Count}\nCards in Deck: {_deck.cards.Count}\n");
         }
         public void PrintContents(List<ICard> CardList)
         {

@@ -106,7 +106,7 @@ namespace MonsterCardTradingGame
                             player1.BuildDeck();
                             player1.PrintUserData();
 
-                            User player2 = new User("ProGamer", "pro");
+                            User player2 = new User("ProGamer");
                             player2.PrintUserData();
                             player2.BuyPackage();
                             player2.PrintUserData();
@@ -319,7 +319,7 @@ namespace MonsterCardTradingGame
                     using NpgsqlDataReader reader = cmd2.ExecuteReader();
                     while (reader.Read())
                     {
-                        player = new User(reader.GetString(0).ToString(), reader.GetString(1).ToString());
+                        player = new User(reader.GetString(0).ToString());
                     }
                 }
                 con.Close();

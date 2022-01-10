@@ -13,32 +13,14 @@ namespace MonsterCardTradingGame
         {
             _name = name;
             _coins = 20;
-            _unopendPackages = new List<Package>();
-            //_stack = new Stack();
             _deck = new Deck();
         }
         private Random random = new Random();
-        private Stack _stack { get; set; }
         private Deck _deck { get; set; }
         private string _name { get; set; }
         private int _elo { get; set; }
         private int _coins { get; set; }
-        private List<Package> _unopendPackages;
 
-        //public void OpenPackage()
-        //{
-        //    Console.WriteLine("Opening a Package...\n");
-        //    Package package = _unopendPackages.ElementAt(0);
-        //    foreach (ICard card in package.CardsInPackage)
-        //    {
-        //        _stack.cards.Add(card);
-        //    }
-        //    _unopendPackages.Remove(package);
-        //}
-        public void PrintUserData()
-        {
-            Console.WriteLine($"Username: {_name}\nCoins: {_coins}\nUnopend packages: {_unopendPackages.Count}\nCards in Stack: {_stack.cards.Count}\nCards in Deck: {_deck.cards.Count}\n");
-        }
         public void PrintContents(List<ICard> CardList)
         {
             int index = 1;

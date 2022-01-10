@@ -24,22 +24,17 @@ namespace MonsterCardTradingGame
         private int _elo { get; set; }
         private int _coins { get; set; }
         private List<Package> _unopendPackages;
-        public void BuyPackage()
-        {
-            Console.WriteLine("Buying a Package...\n");
-            _coins -= Package.price;
-            _unopendPackages.Add(new Package());
-        }
-        public void OpenPackage()
-        {
-            Console.WriteLine("Opening a Package...\n");
-            Package package = _unopendPackages.ElementAt(0);
-            foreach (ICard card in package.CardsInPackage)
-            {
-                _stack.cards.Add(card);
-            }
-            _unopendPackages.Remove(package);
-        }
+
+        //public void OpenPackage()
+        //{
+        //    Console.WriteLine("Opening a Package...\n");
+        //    Package package = _unopendPackages.ElementAt(0);
+        //    foreach (ICard card in package.CardsInPackage)
+        //    {
+        //        _stack.cards.Add(card);
+        //    }
+        //    _unopendPackages.Remove(package);
+        //}
         public void PrintUserData()
         {
             Console.WriteLine($"Username: {_name}\nCoins: {_coins}\nUnopend packages: {_unopendPackages.Count}\nCards in Stack: {_stack.cards.Count}\nCards in Deck: {_deck.cards.Count}\n");
@@ -53,20 +48,6 @@ namespace MonsterCardTradingGame
                 index++;
             }
         }
-        //public void BuildDeck()
-        //{
-        //    for(int i = 0; i < _deck.NumberOfCardsInDeck; i++)
-        //    {
-        //        Console.WriteLine("Enter the number of a card to add it to your deck!\nStack:");
-        //        PrintContents(_stack.cards);
-        //        string input = Console.ReadLine();
-        //        int ChosenCard = Convert.ToInt32(input);
-        //        _deck.cards.Add(_stack.cards[ChosenCard - 1]);
-        //        _stack.cards.RemoveAt(ChosenCard - 1);
-        //        Console.WriteLine("Deck:");
-        //        PrintContents(_deck.cards);
-        //    }
-        //}
 
         public int GetNumberOfCardsInDeck()
         {
@@ -133,6 +114,36 @@ namespace MonsterCardTradingGame
                 Console.WriteLine("Type the name of the card you want to add!");
                 string input = Console.ReadLine();
                 Database.MoveCardToDeckOrStack(input, true, _name);
+            }
+        }
+
+        public void BuyPackages()
+        {
+            Console.WriteLine(" How many Packages do you want to buy?");
+            int amount = Convert.ToInt32(Console.ReadLine());
+            Database.BuyPackages(_name, amount);
+        }
+
+
+        public void OpenPackage()
+        {
+            List<string> cards = Database.GetAllCardNames();
+            int RandomIndex;
+            string CurrentCard;
+            if (Database.UserHasPackages(_name))
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    RandomIndex = random.Next(0, cards.Count);
+                    CurrentCard = cards[RandomIndex];
+                    Console.WriteLine(CurrentCard);
+                    Database.AddCardToStack(_name, CurrentCard);
+                }
+                Database.DecrementNumberOfPackages(_name);
+            }
+            else
+            {
+                Console.WriteLine(" You don't have any Packages, buy some first!");
             }
         }
     }

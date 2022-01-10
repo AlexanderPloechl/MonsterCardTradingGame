@@ -12,6 +12,7 @@ namespace MonsterCardTradingGame
     {
         private static Database _database; //singelton
         private const string _CONNECTION_STRING = "Server = localhost; Port=5432;User Id = postgres; Password=12345678;Database=postgres;";
+        
 
         public static Database GetDatabaseInstance()
         {
@@ -72,17 +73,6 @@ namespace MonsterCardTradingGame
                     Console.WriteLine(" Login failed!\n Check your credentials!");
                     success = false;
                 }
-                //if (success)
-                //{
-                //    string query2 = @"select * from public.Users where username = @_username";
-                //    NpgsqlCommand cmd2 = new NpgsqlCommand(query2, con);
-                //    cmd2.Parameters.AddWithValue("_username", username); 
-                //    using NpgsqlDataReader reader = cmd2.ExecuteReader();
-                //    while (reader.Read())
-                //    {
-                //        _player = new User(reader.GetString(0).ToString());
-                //    }
-                //}
                 con.Close();
                 return success;
             }
@@ -337,8 +327,6 @@ namespace MonsterCardTradingGame
         {
             using (NpgsqlConnection con = GetConnection())
             {
-
-
                 string query = @"update public.CardsInInventory set IsInDeck = false where owner = @_owner";
                 NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                 cmd.Parameters.AddWithValue("_owner", owner);
@@ -347,6 +335,140 @@ namespace MonsterCardTradingGame
                 if (n != 1)
                 {
                     Console.WriteLine(" Error while deleting your deck");
+                }
+                con.Close();
+            }
+        }
+
+        public static void BuyPackages(string username, int amount)
+        {
+            int coins = 0;
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = @"select * from public.Users where username = @_username";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_username", username);
+                con.Open();
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Console.WriteLine($"\n coins: {reader.GetInt32(3)}");
+                    coins = reader.GetInt32(3);
+                }
+                con.Close();
+                if (coins / amount < 5)
+                {
+                    Console.WriteLine(" You don't have enough coins!");
+                }
+                else
+                {
+                    string query2 = @"update public.Users set packages = packages + @_amount where username = @_username";
+                    NpgsqlCommand cmd2 = new NpgsqlCommand(query2, con);
+                    cmd2.Parameters.AddWithValue("_username", username);
+                    cmd2.Parameters.AddWithValue("_amount", amount);
+                    con.Open();
+                    int n = cmd2.ExecuteNonQuery();
+                    if (n != 1)
+                    {
+                        Console.WriteLine(" Error while receiving packages");
+                    }
+                    con.Close();
+                    string query3 = @"update public.Users set coins = coins - @_price where username = @_username";
+                    NpgsqlCommand cmd3 = new NpgsqlCommand(query3, con);
+                    cmd3.Parameters.AddWithValue("_username", username);
+                    cmd3.Parameters.AddWithValue("_price", amount * 5);
+                    con.Open();
+                    int n2 = cmd3.ExecuteNonQuery();
+                    if (n2 != 1)
+                    {
+                        Console.WriteLine(" Error while paying packages");
+                    }
+                    con.Close();
+                }
+            }
+        }
+
+        
+
+        public static List<string> GetAllCardNames()
+        {
+            List<string> cards = new List<string>();
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = @"select * from public.Cards";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                con.Open();
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    Console.WriteLine($"\n {reader.GetString(1)}");
+                    cards.Add(reader.GetString(1));
+                }
+                con.Close();
+            }
+            return cards;
+        }
+
+        public static bool UserHasPackages(string username)
+        {
+            bool HasPackages = false;
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = "select * from public.Users where username = @_username";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_username", username);
+                con.Open();
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    if (reader.GetInt32(4) > 0)
+                    {
+                        HasPackages = true;
+                    }
+                }
+                con.Close();
+            }
+            return HasPackages;
+        }
+
+        public static void AddCardToStack(string username, string card)
+        {
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = @"insert into public.CardsInInventory(owner, cardname, quantity) values(@_owner, @_cardname, '1') on conflict (owner, cardname) do update set quantity = CardsInInventory.quantity + 1 where excluded.owner = @_owner and excluded.cardname = @_cardname";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_owner", username);
+                cmd.Parameters.AddWithValue("_cardname", card);
+                con.Open();
+                int n = cmd.ExecuteNonQuery();
+                if (n == 1)
+                {
+                    Console.WriteLine($" Added {card} to Stack!");
+                }
+                else
+                {
+                    Console.WriteLine(" Adding to stack failed!");
+                }
+                con.Close();
+            }
+        }
+
+        public static void DecrementNumberOfPackages(string username)
+        {
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = @"update public.Users set packages = packages - 1 where username = @_username";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_username", username);
+                con.Open();
+                int n = cmd.ExecuteNonQuery();
+                if (n == 1)
+                {
+                    Console.WriteLine($" {username} - package");
+                }
+                else
+                {
+                    Console.WriteLine(" Decrementing Packages failed!");
                 }
                 con.Close();
             }

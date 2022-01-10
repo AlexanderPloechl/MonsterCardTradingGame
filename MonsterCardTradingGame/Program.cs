@@ -70,7 +70,7 @@ namespace MonsterCardTradingGame
                     case '3':
                         if (_isLoggedIn)
                         {
-
+                            _player.BuyPackages();
                         }
                         else
                         {
@@ -80,7 +80,7 @@ namespace MonsterCardTradingGame
                     case '4':
                         if (_isLoggedIn)
                         {
-
+                            _player.OpenPackage();
                         }
                         else
                         {
@@ -92,7 +92,7 @@ namespace MonsterCardTradingGame
                         {
                             User player1 = _player;
                             player1.PrintUserData();
-                            player1.BuyPackage();
+                            //player1.BuyPackage();
                             player1.PrintUserData();
                             player1.OpenPackage();
                             player1.PrintUserData();
@@ -101,7 +101,7 @@ namespace MonsterCardTradingGame
 
                             User player2 = new User("ProGamer");
                             player2.PrintUserData();
-                            player2.BuyPackage();
+                            //player2.BuyPackage();
                             player2.PrintUserData();
                             player2.OpenPackage();
                             player2.PrintUserData();

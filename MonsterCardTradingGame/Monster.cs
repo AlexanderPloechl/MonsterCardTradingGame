@@ -8,11 +8,12 @@ namespace MonsterCardTradingGame
 {
     class Monster : ICard
     {
-        public Monster(string name, int damage, MonsterType monsterType)
+        public Monster(string name, int damage, MonsterType monsterType, ElementType elementType)
         {
             this.name = name;
             this.damage = damage;
             this.monsterType = monsterType;
+            this.elementType = elementType;
         }
 
         public string name { get; private set; }

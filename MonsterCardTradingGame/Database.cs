@@ -33,11 +33,13 @@ namespace MonsterCardTradingGame
             using (NpgsqlConnection con = GetConnection())
             {
                 int position = 1;
-                string query = "select * from public.Users";
+                int prev = 0;
+                int counter = 0;
+                string query = "select * from public.Users order by elo desc";
                 NpgsqlCommand cmd = new NpgsqlCommand(query, con);
                 con.Open();
                 using NpgsqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read() && position <= 100)
+                while (reader.Read() && counter < 100)
                 {
                     if (reader.GetString(0) == username)
                     {
@@ -47,7 +49,12 @@ namespace MonsterCardTradingGame
                     {
                         Console.WriteLine($" |{position} - {reader.GetString(0)}: {reader.GetInt32(2)}");
                     }
-                    position++;
+                    if(prev > reader.GetInt32(2))
+                    {
+                        position++;
+                    }
+                    prev = reader.GetInt32(2);
+                    counter++;
                 }
             }
         }
@@ -65,7 +72,9 @@ namespace MonsterCardTradingGame
                 int n = (int)cmd.ExecuteScalar();
                 if (n == 1)
                 {
-                    Console.WriteLine(" Login successfull!");
+                    Console.WriteLine("\n ><><><><><><><><><><");
+                    Console.WriteLine("  Login successfull!");
+                    Console.WriteLine(" ><><><><><><><><><><");
                     success = true;
                 }
                 else
@@ -93,7 +102,9 @@ namespace MonsterCardTradingGame
                     int n = cmd.ExecuteNonQuery();
                     if (n == 1)
                     {
-                        Console.WriteLine(" Signup successfull!");
+                        Console.WriteLine("\n ><><><><><><><><><><");
+                        Console.WriteLine("  Signup successfull!");
+                        Console.WriteLine(" ><><><><><><><><><><");
                         success = true;
                     }
                     else
@@ -143,13 +154,11 @@ namespace MonsterCardTradingGame
                 int eloWinner = -1;
                 string query = @"select * from public.Users where username = @_username";
                 NpgsqlCommand cmd = new NpgsqlCommand(query, con);
-                Console.WriteLine(winner);
                 cmd.Parameters.AddWithValue("_username", winner);
                 con.Open();
                 using NpgsqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Console.WriteLine($"winner {(int)reader.GetInt32(2)}");
                     eloWinner = (int)reader.GetInt32(2);
                 }
                 if (eloWinner >= 0)
@@ -172,13 +181,11 @@ namespace MonsterCardTradingGame
                 int eloLoser = -1;
                 string query3 = @"select * from public.Users where username = @_username3";
                 NpgsqlCommand cmd3 = new NpgsqlCommand(query3, con);
-                Console.WriteLine(loser);
                 cmd3.Parameters.AddWithValue("_username3", loser);
                 con.Open();
                 using NpgsqlDataReader reader2 = cmd3.ExecuteReader();
                 while (reader2.Read())
                 {
-                    Console.WriteLine($"loser {(int)reader2.GetInt32(2)}");
                     eloLoser = (int)reader2.GetInt32(2);
                 }
                 if (eloLoser > 5)
@@ -230,7 +237,6 @@ namespace MonsterCardTradingGame
                 using NpgsqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Console.WriteLine($"\n {reader.GetString(0)}, {reader.GetString(1)}, {reader.GetBoolean(2)}, {reader.GetInt32(3)}");
                     cards.Add(reader.GetString(1), reader.GetInt32(3));
                 }
                 con.Close();
@@ -246,7 +252,6 @@ namespace MonsterCardTradingGame
                     using NpgsqlDataReader reader2 = cmd2.ExecuteReader();
                     while (reader2.Read())
                     {
-                        Console.WriteLine($"\n {reader2.GetBoolean(0)}, {reader2.GetString(1)}");
                         if(reader2.GetBoolean(0)){
                             monsters.Add(reader2.GetString(1), card.Value);
                         }
@@ -258,7 +263,8 @@ namespace MonsterCardTradingGame
                     con.Close();
                 }
                 //spells
-                Console.WriteLine($" Spells:");
+                Console.WriteLine($"\n Spells:");
+                Console.WriteLine(" __________");
                 string query3 = @"select * from public.Spells where cardname = @_cardname";
                 foreach (var spell in spells)
                 {
@@ -268,12 +274,13 @@ namespace MonsterCardTradingGame
                     using NpgsqlDataReader reader3 = cmd3.ExecuteReader();
                     while (reader3.Read())
                     {
-                        Console.WriteLine($"\n {reader3.GetString(0)}, {reader3.GetInt32(1)}, {reader3.GetInt32(2)}, {spell.Value}");
+                        Console.WriteLine($" || {reader3.GetString(0)} | ElementType - {(ElementType)reader3.GetInt32(1)} | Damage - {reader3.GetInt32(2)} | {spell.Value}x");
                     }
                     con.Close();
                 }
                 //monsters
-                Console.WriteLine($" Monsters:");
+                Console.WriteLine($"\n Monsters:");
+                Console.WriteLine(" __________");
                 string query4 = @"select * from public.Monsters where cardname = @_cardname";
                 foreach (var monster in monsters)
                 {
@@ -283,7 +290,7 @@ namespace MonsterCardTradingGame
                     using NpgsqlDataReader reader4 = cmd4.ExecuteReader();
                     while (reader4.Read())
                     {
-                        Console.WriteLine($"\n {reader4.GetString(0)}, {reader4.GetInt32(1)}, {reader4.GetInt32(2)}, {reader4.GetInt32(3)}, {monster.Value}");
+                        Console.WriteLine($" || {reader4.GetString(0)} | MonsterType - {(MonsterType)reader4.GetInt32(1)} | ElementType - {(ElementType)reader4.GetInt32(2)} | Damage - {reader4.GetInt32(3)} | {monster.Value}x");
                     }
                     con.Close();
                 }
@@ -300,7 +307,6 @@ namespace MonsterCardTradingGame
                 con.Open();
                 count = Int32.Parse(cmd.ExecuteScalar().ToString());
                 con.Close();
-                Console.WriteLine($" Cards in deck {count}");
                 return count;
             }
         }
@@ -317,7 +323,7 @@ namespace MonsterCardTradingGame
                 int n = cmd.ExecuteNonQuery();
                 if (n != 1)
                 {
-                    Console.WriteLine(" This Card does not exist or you don't own it!");
+                    Console.WriteLine("\n This Card does not exist or you don't own it!");
                 }
                 con.Close();
             }
@@ -332,7 +338,7 @@ namespace MonsterCardTradingGame
                 cmd.Parameters.AddWithValue("_owner", owner);
                 con.Open();
                 int n = cmd.ExecuteNonQuery();
-                if (n != 1)
+                if (n <= 0)
                 {
                     Console.WriteLine(" Error while deleting your deck");
                 }
@@ -340,25 +346,14 @@ namespace MonsterCardTradingGame
             }
         }
 
-        public static void BuyPackages(string username, int amount)
+        public static void BuyPackages(string username, int amount, int coins)
         {
-            int coins = 0;
+            bool success = true;
             using (NpgsqlConnection con = GetConnection())
             {
-                string query = @"select * from public.Users where username = @_username";
-                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
-                cmd.Parameters.AddWithValue("_username", username);
-                con.Open();
-                using NpgsqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    Console.WriteLine($"\n coins: {reader.GetInt32(3)}");
-                    coins = reader.GetInt32(3);
-                }
-                con.Close();
                 if (coins / amount < 5)
                 {
-                    Console.WriteLine(" You don't have enough coins!");
+                    Console.WriteLine(" You don't have enough coins.");
                 }
                 else
                 {
@@ -371,6 +366,7 @@ namespace MonsterCardTradingGame
                     if (n != 1)
                     {
                         Console.WriteLine(" Error while receiving packages");
+                        success = false;
                     }
                     con.Close();
                     string query3 = @"update public.Users set coins = coins - @_price where username = @_username";
@@ -381,9 +377,14 @@ namespace MonsterCardTradingGame
                     int n2 = cmd3.ExecuteNonQuery();
                     if (n2 != 1)
                     {
-                        Console.WriteLine(" Error while paying packages");
+                        Console.WriteLine(" Error while paying for packages");
+                        success = false;
                     }
                     con.Close();
+                    if (success)
+                    {
+                        Console.WriteLine($"\n You bought {amount} packages.");
+                    }
                 }
             }
         }
@@ -401,7 +402,6 @@ namespace MonsterCardTradingGame
                 using NpgsqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                    Console.WriteLine($"\n {reader.GetString(1)}");
                     cards.Add(reader.GetString(1));
                 }
                 con.Close();
@@ -443,7 +443,7 @@ namespace MonsterCardTradingGame
                 int n = cmd.ExecuteNonQuery();
                 if (n == 1)
                 {
-                    Console.WriteLine($" Added {card} to Stack!");
+                    Console.WriteLine($" {card}");
                 }
                 else
                 {
@@ -462,15 +462,194 @@ namespace MonsterCardTradingGame
                 cmd.Parameters.AddWithValue("_username", username);
                 con.Open();
                 int n = cmd.ExecuteNonQuery();
-                if (n == 1)
-                {
-                    Console.WriteLine($" {username} - package");
-                }
-                else
+                if (n != 1)
                 {
                     Console.WriteLine(" Decrementing Packages failed!");
                 }
                 con.Close();
+            }
+        }
+
+        public static List<ICard> GetDeck(string username)
+        {
+            List<ICard> cards = new List<ICard>();
+            List<string> cardnames = new List<string>();
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = @"select * from public.CardsInInventory where owner = @_owner and IsInDeck = true";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_owner", username);
+                con.Open();
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    cardnames.Add(reader.GetString(1));
+                }
+                con.Close();
+                //split into monsters and spells
+                List<string> monsternames = new List<string>();
+                List<string> spellnames = new List<string>();
+                string query2 = @"select * from public.Cards where cardname = @_cardname";
+                foreach (var card in cardnames)
+                {
+                    NpgsqlCommand cmd2 = new NpgsqlCommand(query2, con);
+                    cmd2.Parameters.AddWithValue("_cardname", card);
+                    con.Open();
+                    using NpgsqlDataReader reader2 = cmd2.ExecuteReader();
+                    while (reader2.Read())
+                    {
+                        if (reader2.GetBoolean(0))
+                        {
+                            monsternames.Add(reader2.GetString(1));
+                        }
+                        else
+                        {
+                            spellnames.Add(reader2.GetString(1));
+                        }
+                    }
+                    con.Close();
+                }
+                //spells
+                string query3 = @"select * from public.Spells where cardname = @_cardname";
+                foreach (var spell in spellnames)
+                {
+                    NpgsqlCommand cmd3 = new NpgsqlCommand(query3, con);
+                    cmd3.Parameters.AddWithValue("_cardname", spell);
+                    con.Open();
+                    using NpgsqlDataReader reader3 = cmd3.ExecuteReader();
+                    while (reader3.Read())
+                    {
+                        cards.Add(new Spell(reader3.GetString(0), reader3.GetInt32(2), (ElementType)reader3.GetInt32(1)));
+                    }
+                    con.Close();
+                }
+                //monsters
+                string query4 = @"select * from public.Monsters where cardname = @_cardname";
+                foreach (var monster in monsternames)
+                {
+                    NpgsqlCommand cmd4 = new NpgsqlCommand(query4, con);
+                    cmd4.Parameters.AddWithValue("_cardname", monster);
+                    con.Open();
+                    using NpgsqlDataReader reader4 = cmd4.ExecuteReader();
+                    while (reader4.Read())
+                    {
+                        cards.Add(new Monster(reader4.GetString(0), reader4.GetInt32(3),(MonsterType)reader4.GetInt32(1), (ElementType)reader4.GetInt32(2)));
+                    }
+                    con.Close();
+                }
+            }
+            return cards;
+        }
+
+        public static int GetElo(string username)
+        {
+            int elo = -1;
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = "select * from public.Users where username = @_username";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_username", username);
+                con.Open();
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    elo = reader.GetInt32(2);
+                }
+            }
+            return elo;
+        }
+
+        public static int GetNumberOfCoins(string username)
+        {
+            int coins = -1;
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = @"select * from public.Users where username = @_username";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_username", username);
+                con.Open();
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    coins = reader.GetInt32(3);
+                }
+                con.Close();
+            }
+            return coins;
+        }
+
+        public static int GetNumberOfPackages(string username)
+        {
+            int packages = -1;
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = @"select * from public.Users where username = @_username";
+                NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                cmd.Parameters.AddWithValue("_username", username);
+                con.Open();
+                using NpgsqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    packages = reader.GetInt32(4);
+                }
+                con.Close();
+            }
+            return packages;
+        }
+
+        public static string UpdateCredential(string username, string credential)
+        {
+            using (NpgsqlConnection con = GetConnection())
+            {
+                string query = "";
+                string NewCredential = "";
+                if (credential == "un")//username
+                {
+                    Console.Write("\n New Username: ");
+                    NewCredential = Console.ReadLine();
+                    bool exists = CheckIfUserExists(NewCredential);
+                    if (!exists)
+                    {
+                        query = @"update public.Users set username = @_new where username = @_username";
+                    }
+                    else
+                    {
+                        Console.WriteLine(" Username is already in use!");
+                    }
+                }
+                else if (credential == "pw")//password
+                {
+                    Console.Write("\n New Password: ");
+                    NewCredential = Console.ReadLine();
+                    Console.Write(" Retype Password: ");
+                    string retype = Console.ReadLine();
+                    if(NewCredential == retype)
+                    {
+                        query = @"update public.Users set password = @_new where username = @_username";
+                    }
+                    else
+                    {
+                        Console.WriteLine(" Your inputs did not match! Try again!");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($" Error, cant update credential '{credential}'!");
+                }
+                if(query != "" && NewCredential != "")
+                {
+                    NpgsqlCommand cmd = new NpgsqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("_username", username);
+                    cmd.Parameters.AddWithValue("_new", NewCredential);
+                    con.Open();
+                    int n = cmd.ExecuteNonQuery();
+                    if (n != 1)
+                    {
+                        Console.WriteLine(" Updating credentials failed!");
+                    }
+                    con.Close();
+                }
+                return NewCredential;
             }
         }
     }

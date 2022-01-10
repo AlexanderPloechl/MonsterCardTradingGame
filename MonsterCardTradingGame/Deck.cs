@@ -18,16 +18,14 @@ namespace MonsterCardTradingGame
 
         public Deck(List<ICard> stack)
         {
-            for(int i = 0; i < NumberOfCardsInDeck; i++)
-            {
-                AddCardToDeck(stack);
-            }
+            //for(int i = 0; i < NumberOfCardsInDeck; i++)
+            //{
+            //    AddCardToDeck(stack);
+            //}
         }
-        void AddCardToDeck(List<ICard> stack)
+        public void FillDeck(List<ICard> _cards)
         {
-            //show cards in stack stack.showCards
-            //choose card
-            //remove card from stack and add to deck
+            cards = _cards;
         }
         void RemoveCardFromDeck()
         {
@@ -35,8 +33,8 @@ namespace MonsterCardTradingGame
         }
         void ReplaceCardInDeck(List<ICard> stack)
         {
-            RemoveCardFromDeck();
-            AddCardToDeck(stack);
+            //RemoveCardFromDeck();
+            //AddCardToDeck(stack);
         }
     }
 }

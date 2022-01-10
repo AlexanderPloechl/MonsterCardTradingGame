@@ -13,12 +13,12 @@ namespace MonsterCardTradingGame
         public const int price = 5;
         public Package()
         {
-            CardsInPackage = new List<ICard>();
-            CardsInPackage.Add(new Monster("WaterGoblin", 10, MonsterType.Goblin));
-            CardsInPackage.Add(new Monster("FireTroll", 15, MonsterType.Troll));
-            CardsInPackage.Add(new Spell("FireSpell", 10, ElementType.Fire));
-            CardsInPackage.Add(new Spell("WaterSpell", 20, ElementType.Water));
-            CardsInPackage.Add(new Spell("RegularSpell", 10, ElementType.Normal));
+            //CardsInPackage = new List<ICard>();
+            //CardsInPackage.Add(new Monster("WaterGoblin", 10, MonsterType.Goblin));
+            //CardsInPackage.Add(new Monster("FireTroll", 15, MonsterType.Troll));
+            //CardsInPackage.Add(new Spell("FireSpell", 10, ElementType.Fire));
+            //CardsInPackage.Add(new Spell("WaterSpell", 20, ElementType.Water));
+            //CardsInPackage.Add(new Spell("RegularSpell", 10, ElementType.Normal));
         }
 
         public void PrintPackageContents()

@@ -90,36 +90,22 @@ namespace MonsterCardTradingGame
                     case '5':
                         if (_isLoggedIn)
                         {
-                            User player1 = _player;
-                            player1.PrintUserData();
-                            //player1.BuyPackage();
-                            player1.PrintUserData();
-                            player1.OpenPackage();
-                            player1.PrintUserData();
-                            player1.BuildDeck();
-                            player1.PrintUserData();
-
-                            User player2 = new User("ProGamer");
-                            player2.PrintUserData();
-                            //player2.BuyPackage();
-                            player2.PrintUserData();
-                            player2.OpenPackage();
-                            player2.PrintUserData();
-                            player2.BuildDeck();
-                            player2.PrintUserData();
-                            Battle battle = new Battle(player1, player2);
+                            User Bot = new User("Bot");
+                            _player.GetDeckFromDb();
+                            Bot.GetDeckFromDb();
+                            Battle battle = new Battle(_player, Bot);
                             User winner = battle.Fight();
                             Console.WriteLine("_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
                             if (winner == null)
                             {
-                                Console.WriteLine("battle ended in a draw");
+                                Console.WriteLine(" The battle ended in a draw.");
                             }
                             else
                             {
-                                Console.WriteLine($" {winner.GetName()}  won the game");
-                                if(player1 == winner)
+                                Console.WriteLine($" {winner.GetName()} won the game");
+                                if(_player == winner)
                                 {
-                                    _player.SetElo(Database.UpdateElos(winner.GetName(), player2.GetName(), _player.GetName()));
+                                    _player.SetElo(Database.UpdateElos(winner.GetName(), Bot.GetName(), _player.GetName()));
                                     if (_player.GetElo() >= 0)
                                     {
                                         Console.WriteLine($" You gained 3 ELO for winning! Your ELO: {_player.GetElo()}");
@@ -129,9 +115,9 @@ namespace MonsterCardTradingGame
                                         Console.WriteLine(" Error while updating ELO");
                                     }
                                 }
-                                else if (player2 == winner)
+                                else if (Bot == winner)
                                 {
-                                    _player.SetElo(Database.UpdateElos(winner.GetName(), player1.GetName(), _player.GetName()));
+                                    _player.SetElo(Database.UpdateElos(winner.GetName(), _player.GetName(), _player.GetName()));
                                     if (_player.GetElo() >= 0)
                                     {
                                         Console.WriteLine($" You lost 5 ELO for losing! Your ELO: {_player.GetElo()}");
@@ -156,7 +142,7 @@ namespace MonsterCardTradingGame
                     case '6':
                         if (_isLoggedIn)
                         {
-
+                            Console.WriteLine(" This feature has not been implementet yet");
                         }
                         else
                         {
@@ -166,7 +152,7 @@ namespace MonsterCardTradingGame
                     case '7':
                         if (_isLoggedIn)
                         {
-
+                            Console.WriteLine(" This feature has not been implementet yet");
                         }
                         else
                         {
@@ -176,7 +162,7 @@ namespace MonsterCardTradingGame
                     case '8':
                         if (_isLoggedIn)
                         {
-
+                            _player.ShowProfile();
                         }
                         else
                         {
@@ -220,7 +206,7 @@ namespace MonsterCardTradingGame
             }
             else
             {
-                Console.WriteLine("\nLogged in as ... || ELO ...\n");
+                Console.WriteLine($"\n Logged in as {_player.GetName()} || ELO {_player.GetElo()}\n");
                 Console.WriteLine(" Press \"1\" to VIEW your STACK!");
                 Console.WriteLine(" Press \"2\" to BUILD a DECK!");
                 Console.WriteLine(" Press \"3\" to BUY a PACKAGE!");
@@ -268,6 +254,15 @@ namespace MonsterCardTradingGame
             if (success)
             {
                 _player = new User(username);
+                int elo = Database.GetElo(username);
+                if(elo < 0)
+                {
+                    Console.WriteLine(" Error while trying to get elo");
+                }
+                else
+                {
+                    _player.SetElo(elo);
+                }
             }
             return success;
         }

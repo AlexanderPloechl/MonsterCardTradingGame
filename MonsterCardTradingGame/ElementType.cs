@@ -10,6 +10,8 @@ namespace MonsterCardTradingGame
     {
         Fire,
         Water,
-        Normal
+        Normal,
+        Ice,
+        Electric
     }
 }

@@ -8,7 +8,7 @@ namespace MonsterCardTradingGame
 {
     class Battle
     {
-        private Dictionary<HashSet<ElementType>, ElementType> SuperiorElement = new Dictionary<HashSet<ElementType>, ElementType>(HashSet<ElementType>.CreateSetComparer()) { { new HashSet<ElementType> { ElementType.Fire, ElementType.Water }, ElementType.Water }, { new HashSet<ElementType> { ElementType.Normal, ElementType.Fire }, ElementType.Fire }, { new HashSet<ElementType> { ElementType.Normal, ElementType.Water }, ElementType.Normal } };
+        private Dictionary<HashSet<ElementType>, ElementType> SuperiorElement = new Dictionary<HashSet<ElementType>, ElementType>(HashSet<ElementType>.CreateSetComparer()) { { new HashSet<ElementType> { ElementType.Fire, ElementType.Water }, ElementType.Water }, { new HashSet<ElementType> { ElementType.Normal, ElementType.Fire }, ElementType.Fire }, { new HashSet<ElementType> { ElementType.Normal, ElementType.Water }, ElementType.Normal }, { new HashSet<ElementType> { ElementType.Fire, ElementType.Ice }, ElementType.Fire }, { new HashSet<ElementType> { ElementType.Water, ElementType.Ice }, ElementType.Ice }, { new HashSet<ElementType> { ElementType.Normal, ElementType.Ice }, ElementType.Ice }, { new HashSet<ElementType> { ElementType.Electric, ElementType.Ice }, ElementType.Ice }, { new HashSet<ElementType> { ElementType.Fire, ElementType.Electric }, ElementType.Electric }, { new HashSet<ElementType> { ElementType.Water, ElementType.Electric }, ElementType.Water }, { new HashSet<ElementType> { ElementType.Normal, ElementType.Electric }, ElementType.Electric }};
         private Dictionary<MonsterType, HashSet<MonsterType>> MonstersWeaknessesAgainstMonsters = new Dictionary<MonsterType, HashSet<MonsterType>> { { MonsterType.Goblin, new HashSet<MonsterType> { MonsterType.Dragon } }, { MonsterType.Ork, new HashSet<MonsterType> { MonsterType.Wizard } }, { MonsterType.Dragon, new HashSet<MonsterType> { MonsterType.Fireelf } } };
         private Dictionary<MonsterType, HashSet<ElementType>> MonstersWeaknessesAgainstSpells = new Dictionary<MonsterType, HashSet<ElementType>> { { MonsterType.Knight, new HashSet<ElementType> { ElementType.Water } } };
         private Dictionary<ElementType, HashSet<MonsterType>> SpellsWeaknessesAgainstMonsters = new Dictionary<ElementType, HashSet<MonsterType>> { { ElementType.Fire , new HashSet<MonsterType> { MonsterType.Kraken } }, { ElementType.Water , new HashSet<MonsterType> { MonsterType.Kraken } }, { ElementType.Normal , new HashSet<MonsterType> { MonsterType.Kraken } } };
@@ -45,21 +45,18 @@ namespace MonsterCardTradingGame
             if (weaknessPlayer1sMonster.Contains(player2sMonster.monsterType) && !weaknessPlayer2sMonster.Contains(player1sMonster.monsterType))
             {
                 //player1 weak against player2 and player2 not weak against player1
-                Console.WriteLine("\n --------------");
                 Console.WriteLine($" {player1sMonster.name} is weak against {player2sMonster.name} therefor ...");
                 return _player2;
             }
             else if(weaknessPlayer2sMonster.Contains(player1sMonster.monsterType) && !weaknessPlayer1sMonster.Contains(player2sMonster.monsterType))
             {
                 //player2 weak against player1 and player1 not weak against player2
-                Console.WriteLine("\n --------------");
                 Console.WriteLine($" {player2sMonster.name} is weak against {player1sMonster.name} therefor ...");
                 return _player1;
             }
             else if(weaknessPlayer1sMonster.Contains(player2sMonster.monsterType) && weaknessPlayer2sMonster.Contains(player1sMonster.monsterType))
             {
                 //both are weak against each other
-                Console.WriteLine("\n --------------");
                 Console.WriteLine($" {player1sMonster.name} and {player2sMonster.name} are both weak against each other therefor ...");
                 return null;
             }
@@ -96,21 +93,18 @@ namespace MonsterCardTradingGame
                 if (weaknessPlayer1sSpell.Contains(player2sMonster.monsterType) && !weaknessPlayer2sMonster.Contains(player1sSpell.elementType))
                 {
                     //player1 weak against player2 and player2 not weak against player1
-                    Console.WriteLine("\n --------------");
                     Console.WriteLine($" {player1sSpell.name} is weak against {player2sMonster.name} therefor ...");
                     return _player2;
                 }
                 else if (weaknessPlayer2sMonster.Contains(player1sSpell.elementType) && !weaknessPlayer1sSpell.Contains(player2sMonster.monsterType))
                 {
                     //player2 weak against player1 and player1 not weak against player2
-                    Console.WriteLine("\n --------------");
                     Console.WriteLine($" {player2sMonster.name} is weak against {player1sSpell.name} therefor ...");
                     return _player1;
                 }
                 else if (weaknessPlayer1sSpell.Contains(player2sMonster.monsterType) && weaknessPlayer2sMonster.Contains(player1sSpell.elementType))
                 {
                     //both are weak against each other
-                    Console.WriteLine("\n --------------");
                     Console.WriteLine($" {player1sSpell.name} and {player2sMonster.name} are both weak against each other therefor ...");
                     return null;
                 }
@@ -136,21 +130,18 @@ namespace MonsterCardTradingGame
                 if (weaknessPlayer1sMonster.Contains(player2sSpell.elementType) && !weaknessPlayer2sSpell.Contains(player1sMonster.monsterType))
                 {
                     //player1 weak against player2 and player2 not weak against player1
-                    Console.WriteLine("\n --------------");
                     Console.WriteLine($" {player1sMonster.name} is weak against {player2sSpell.name} therefor ...");
                     return _player2;
                 }
                 else if (weaknessPlayer2sSpell.Contains(player1sMonster.monsterType) && !weaknessPlayer1sMonster.Contains(player2sSpell.elementType))
                 {
                     //player2 weak against player1 and player1 not weak against player2
-                    Console.WriteLine("\n --------------");
                     Console.WriteLine($" {player2sSpell.name} is weak against {player1sMonster.name} therefor ...");
                     return _player1;
                 }
                 else if (weaknessPlayer1sMonster.Contains(player2sSpell.elementType) && weaknessPlayer2sSpell.Contains(player1sMonster.monsterType))
                 {
                     //both are weak against each other
-                    Console.WriteLine("\n --------------");
                     Console.WriteLine($" {player1sMonster.name} and {player2sSpell.name} are both weak against each other therefor ...");
                     return null;
                 }
@@ -218,7 +209,6 @@ namespace MonsterCardTradingGame
         private User StandardDamageComparison(ICard player1sCard, ICard player2sCard)
         {
             User winner;
-            Console.WriteLine("\n --------------");
             Console.WriteLine($" {player1sCard.damage} dmg VS {player2sCard.damage} dmg");
             if (player1sCard.damage > player2sCard.damage)
             {
@@ -238,7 +228,7 @@ namespace MonsterCardTradingGame
         public User Fight()
         {
             Console.WriteLine("\n _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
-            Console.WriteLine($" {_player1.GetName()} <p1elo> VS {_player2.GetName()} <p2elo>" );
+            Console.WriteLine($" {_player1.GetName()} - {Database.GetElo(_player1.GetName())} VS {_player2.GetName()} - {Database.GetElo(_player2.GetName())}" );
             Console.WriteLine(" _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _");
             ICard player1CurrentCard;
             ICard player2CurrentCard;
@@ -287,7 +277,6 @@ namespace MonsterCardTradingGame
                 {
                     _endGame = true;
                 }
-
             }
             if(_roundCounter < 100)
             {
